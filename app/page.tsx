@@ -12,10 +12,10 @@ const steps = [
 ];
 
 const ecosystem = [
-  ["01", "Tingle app", "Explore sketch cards, hear pronunciation, and choose your memory cue.", "Choose"],
-  ["02", "Sketch memory book", "Quiet, hand-drawn pages give every word room to stick.", "Notice"],
-  ["03", "Word blocks", "Build spelling with warm wood and your chosen color cue.", "Build"],
-  ["04", "Recall games", "Simple, low-pressure reviews turn recognition into recall.", "Remember"],
+  ["01", "Tingle Word Board", "An A2 wooden rail board holds longer words securely—without magnets.", "Build"],
+  ["02", "Wood & color blocks", "Rounded alphabet blocks and seven color cue blocks make learning safe and tactile.", "Touch"],
+  ["03", "Online memory cards", "Sketch, pronunciation, meaning, and examples come together; color is chosen in the app.", "Choose"],
+  ["04", "Recall games", "Simple, low-pressure reviews turn recognition into recall without overbuilding the experience.", "Remember"],
 ];
 
 const cueOptions = [
@@ -23,6 +23,9 @@ const cueOptions = [
   { name: "Green", color: "#2E9D71", soft: "#E7F5EE" },
   { name: "Yellow", color: "#E5B600", soft: "#FFF7CE" },
   { name: "Blue", color: "#3977D1", soft: "#E8F1FF" },
+  { name: "Red", color: "#D95A4E", soft: "#FBEAE7" },
+  { name: "Purple", color: "#8B63C7", soft: "#F1EBFA" },
+  { name: "Pink", color: "#D86F9B", soft: "#FBEAF1" },
 ];
 
 export default function Home() {
@@ -59,7 +62,7 @@ export default function Home() {
               Build it.<br />Choose it.<br /><em className="relative not-italic text-tingle-orange">Remember it.<span className="sketch-underline" aria-hidden="true" /></em>
             </h1>
             <p className="mt-9 max-w-[560px] text-lg leading-8 text-tingle-muted sm:text-xl">
-              Tingle connects safe wooden word building with calm online memory cards and personal color cues—so English words are easier to recognize and recall.
+              Tingle pairs a safe A2 wooden rail board with calm online memory cards and personal color choice in the app—so English words are easier to recognize and recall.
             </p>
             <div className="mt-10 flex flex-wrap items-center gap-4">
               <a className="button" href="#early-access">Join early access <span aria-hidden="true">→</span></a>
@@ -79,14 +82,14 @@ export default function Home() {
 
       <section className="border-y border-black/5 bg-tingle-paper py-8">
         <div className="mx-auto flex max-w-[1240px] flex-col items-center justify-between gap-5 px-5 text-center sm:px-8 md:flex-row md:text-left">
-          <p className="font-serif text-2xl leading-tight sm:text-3xl">A word in your hands. A memory that travels.</p>
-          <p className="max-w-xl text-base leading-7 text-tingle-muted">The board makes learning tangible. Online cards make each memory personal, portable, and ready to revisit.</p>
+          <p className="font-serif text-2xl leading-tight sm:text-3xl">Tingle helps learners build words offline and remember them online.</p>
+          <p className="max-w-xl text-base leading-7 text-tingle-muted"><strong className="text-tingle-charcoal">Block offline. Card online. Color chosen in app.</strong> One focused hybrid system for tangible learning and personal recall.</p>
         </div>
       </section>
 
       <section id="how" className="section-shell">
         <div className="section-heading">
-          <div><p className="section-number">01 / HOW IT WORKS</p><h2>From page to <em>lasting recall.</em></h2></div>
+          <div><p className="section-number">01 / HOW IT WORKS</p><h2>From building to <em>lasting recall.</em></h2></div>
           <p>One gentle flow connects building, choosing, listening, and remembering—without adding noise.</p>
         </div>
         <div className="mt-14 grid gap-3 md:grid-cols-5">
@@ -118,6 +121,7 @@ export default function Home() {
               ))}
             </div>
             <p className="theory-note">Color is a support, not a guarantee. Durable recall still depends on attention, meaning, and repeated retrieval.</p>
+            <p className="theory-note">Over time, Tingle&apos;s AI layer can learn which color cues best support each learner&apos;s recall.</p>
             <p className="research-links">Research basis: <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC3743993/" target="_blank" rel="noreferrer">color, attention & memory ↗</a><a href="https://pubmed.ncbi.nlm.nih.gov/18062540/" target="_blank" rel="noreferrer">color as context ↗</a></p>
           </div>
           <div className="memory-rule-visual">
@@ -136,7 +140,7 @@ export default function Home() {
       <section className="section-shell">
         <div className="section-heading">
           <div><p className="section-number">03 / PERSONAL MEMORY</p><h2>Choose your <em>memory cue.</em></h2></div>
-          <p>The word stays the same. The cue changes with the learner. Try each color to see how one calm card can feel personally recognizable.</p>
+          <p>The word stays the same. The cue changes with the learner. Choose from seven color cues in the app and find the quiet signal that feels personally recognizable.</p>
         </div>
         <div className="cue-stage mt-14">
           <div className="cue-card" style={{ "--cue": cue.color, "--cue-soft": cue.soft } as React.CSSProperties}>
@@ -177,11 +181,11 @@ export default function Home() {
       <section className="section-shell">
         <div className="blocks-panel">
           <div className="max-w-xl">
-            <p className="section-number">05 / TINGLE WORD BLOCKS</p>
+            <p className="section-number">05 / TINGLE WORD BOARD</p>
             <h2 className="mt-5 font-serif text-[clamp(3rem,5vw,5.2rem)] leading-[0.95] tracking-[-0.05em]">Build the word.<br /><em>Feel the recall.</em></h2>
-            <p className="mt-7 text-lg leading-8 text-tingle-muted">Safe, smooth wooden blocks bring spelling off the screen. Learners build each word by hand, using personalized color blocks as tactile memory anchors.</p>
+            <p className="mt-7 text-lg leading-8 text-tingle-muted">The A2 wooden rail board gives learners room to build longer words by hand. Its rail-guided placement keeps safe, smooth blocks in line—without magnets.</p>
             <ul className="mt-8 grid gap-3 sm:grid-cols-2">
-              {["Safe, rounded natural wood", "Personalized color cues", "Hands-on word building", "Tactile recall practice"].map(item => <li className="check-item" key={item}><span>✓</span>{item}</li>)}
+              {["A2 rail board, no magnet", "Safe, rounded natural wood", "Wood alphabet blocks", "7 color cue blocks"].map(item => <li className="check-item" key={item}><span>✓</span>{item}</li>)}
             </ul>
           </div>
           <div className="word-blocks" aria-label="Wooden letter blocks spelling Tingle">
@@ -194,8 +198,8 @@ export default function Home() {
         <div className="coming-panel">
           <div>
             <span className="coming-pill">COMING NEXT · PHASE 2</span>
-            <h2 className="mt-7 font-serif text-[clamp(3rem,5.4vw,5.6rem)] leading-[0.95] tracking-[-0.05em]">Draw your own<br /><em>memory card.</em></h2>
-            <p className="mt-7 max-w-xl text-lg leading-8 text-tingle-muted">Soon, learners will be able to draw a personal cue and turn it into a reusable memory card. For now, Tingle stays focused: build the word, open the card, choose a cue, remember it.</p>
+            <h2 className="mt-7 font-serif text-[clamp(3rem,5.4vw,5.6rem)] leading-[0.95] tracking-[-0.05em]">Draw, scan & animate<br /><em>your own card.</em></h2>
+            <p className="mt-7 max-w-xl text-lg leading-8 text-tingle-muted">Later—not in Phase 1—learners will draw a personal cue, scan it, and use AI animation to turn it into a reusable memory card. For now, Tingle stays focused: build the word, open the card, choose a cue, remember it.</p>
           </div>
           <div className="phase-divider"><span className="phase active"><b>Now</b> Build & remember</span><span className="phase-line" /><span className="phase"><b>Next</b> Draw your own</span></div>
         </div>
@@ -228,7 +232,7 @@ export default function Home() {
       </section>
 
       <footer className="mx-auto flex max-w-[1240px] flex-col justify-between gap-8 px-5 py-10 text-sm text-tingle-muted sm:px-8 md:flex-row md:items-end">
-        <div><a href="#top" className="brand-logo" aria-label="Tingle home"><Image src="/tingle-logo-official.jpg" alt="Tingle" width={100} height={100} className="brand-logo-image" /></a><p className="mt-3">Build it. Choose it. Remember it.</p></div>
+        <div><a href="#top" className="brand-logo" aria-label="Tingle home"><Image src="/tingle-logo-official.jpg" alt="Tingle" width={100} height={100} className="brand-logo-image" /></a><p className="mt-3">Build offline. Remember online.</p></div>
         <div className="flex flex-wrap gap-x-8 gap-y-3"><a className="nav-link" href="#how">How it works</a><a className="nav-link" href="#color">Why color</a><a className="nav-link" href="#early-access">Early access</a></div>
         <p>© {new Date().getFullYear()} Tingle. Learning, made memorable.</p>
       </footer>
