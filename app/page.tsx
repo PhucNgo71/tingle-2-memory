@@ -65,7 +65,7 @@ export default function Home() {
               <a className="button" href="#early-access">Join early access <span aria-hidden="true">→</span></a>
               <a className="text-link" href="#how">See how memory moves <span aria-hidden="true">↓</span></a>
             </div>
-            <p className="mt-8 flex items-center gap-3 text-sm font-semibold text-tingle-muted"><span className="tiny-mark">90/10</span> 90% sketch. 10% color. 100% memory.</p>
+            <p className="mt-8 flex items-center gap-3 text-sm font-semibold text-tingle-muted"><span className="tiny-mark">CUE</span> One color. One personal connection. Another way back to the word.</p>
           </div>
           <div className="relative lg:-mr-28">
             <div className="hero-image-wrap">
@@ -104,10 +104,21 @@ export default function Home() {
           <div>
             <p className="section-number text-orange-300">02 / WHY COLOR MATTERS</p>
             <h2 className="mt-5 max-w-[650px] font-serif text-[clamp(3.2rem,6vw,6rem)] leading-[0.95] tracking-[-0.05em]">Color is not <em className="text-tingle-orange">decoration.</em></h2>
-            <p className="mt-8 max-w-xl text-lg leading-8 text-white/65">In Tingle, color works as a quiet memory signal. The main card stays calm and sketch-based. A small color cue helps each learner recognize, connect, and recall the word.</p>
-            <div className="mt-10 grid max-w-xl grid-cols-3 gap-3">
-              {[["90%", "Sketch"], ["10%", "Color"], ["100%", "Memory"]].map(([value, label]) => <div className="ratio-stat" key={label}><strong>{value}</strong><span>{label}</span></div>)}
+            <p className="mt-8 max-w-xl text-lg leading-8 text-white/65">A memory becomes easier to revisit when learning gives the brain a distinctive, meaningful cue. Tingle lets each learner choose a color and reconnect with that same cue during review.</p>
+            <div className="theory-list mt-10">
+              {[
+                ["01", "Notice", "Color can direct attention to the part of a card that matters, giving the word a clearer moment of focus."],
+                ["02", "Connect", "Choosing a color adds a personal association to the word instead of treating color as decoration."],
+                ["03", "Retrieve", "When the same cue returns during review, it can help reinstate part of the original learning context."],
+              ].map(([number, title, body]) => (
+                <article className="theory-point" key={title}>
+                  <span>{number}</span>
+                  <div><h3>{title}</h3><p>{body}</p></div>
+                </article>
+              ))}
             </div>
+            <p className="theory-note">Color is a support, not a guarantee. Durable recall still depends on attention, meaning, and repeated retrieval.</p>
+            <p className="research-links">Research basis: <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC3743993/" target="_blank" rel="noreferrer">color, attention & memory ↗</a><a href="https://pubmed.ncbi.nlm.nih.gov/18062540/" target="_blank" rel="noreferrer">color as context ↗</a></p>
           </div>
           <div className="memory-rule-visual">
             <div className="rule-card rule-card-back" aria-hidden="true" />
@@ -117,7 +128,7 @@ export default function Home() {
               <div className="card-word"><span>sun</span><small>/sʌn/</small></div>
               <span className="color-chip">your cue</span>
             </div>
-            <span className="pencil-note">small cue,<br />strong return ↗</span>
+            <span className="pencil-note">one cue,<br />another way back ↗</span>
           </div>
         </div>
       </section>

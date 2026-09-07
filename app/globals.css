@@ -52,9 +52,15 @@ a { color: inherit; text-decoration: none; }
 .step-card h3 { font-family: Georgia, "Times New Roman", serif; font-size: 1.75rem; letter-spacing: -.035em; }
 .step-card p { margin-top: .85rem; color: var(--muted); font-size: .93rem; line-height: 1.65; }
 
-.ratio-stat { border-top: 1px solid rgba(255,255,255,.17); padding-top: 1.2rem; }
-.ratio-stat strong { display: block; font-family: Georgia, serif; font-size: clamp(2rem, 4vw, 3.6rem); font-weight: 400; line-height: 1; }
-.ratio-stat span { display: block; margin-top: .7rem; color: rgba(255,255,255,.5); font-size: .7rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+.theory-list { max-width: 610px; border-top: 1px solid rgba(255,255,255,.15); }
+.theory-point { display: grid; grid-template-columns: 2.8rem 1fr; gap: 1rem; border-bottom: 1px solid rgba(255,255,255,.13); padding: 1.25rem 0; }
+.theory-point > span { display: grid; width: 2rem; height: 2rem; place-items: center; border: 1px solid rgba(255,122,0,.5); border-radius: 50%; color: #ffaf63; font-size: .64rem; font-weight: 900; }
+.theory-point h3 { font-family: Georgia, serif; font-size: 1.35rem; font-weight: 400; letter-spacing: -.02em; }
+.theory-point p { margin-top: .35rem; color: rgba(255,255,255,.55); font-size: .9rem; line-height: 1.65; }
+.theory-note { max-width: 610px; margin-top: 1.4rem; color: rgba(255,255,255,.68); font-size: .85rem; font-weight: 650; line-height: 1.6; }
+.research-links { display: flex; flex-wrap: wrap; gap: .45rem 1rem; max-width: 610px; margin-top: 1.15rem; color: rgba(255,255,255,.35); font-size: .72rem; line-height: 1.5; }
+.research-links a { color: rgba(255,255,255,.6); text-decoration: underline; text-decoration-color: rgba(255,122,0,.55); text-underline-offset: .22rem; }
+.research-links a:hover { color: #ffb36e; }
 .memory-rule-visual { position: relative; min-height: 590px; display: grid; place-items: center; }
 .rule-card { position: relative; z-index: 2; width: min(410px, 80vw); aspect-ratio: 4/5; display: flex; flex-direction: column; justify-content: space-between; border: 1px solid rgba(255,255,255,.6); border-radius: 2rem; background: #fffaf2; padding: 2rem; color: var(--charcoal); box-shadow: 0 30px 90px rgba(0,0,0,.28); transform: rotate(3deg); }
 .rule-card-back { position: absolute; z-index: 1; background: #f0e9de; transform: translate(-38px, 20px) rotate(-6deg); opacity: .58; }
