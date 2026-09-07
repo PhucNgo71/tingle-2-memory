@@ -4,15 +4,15 @@ import Image from "next/image";
 import { FormEvent, useState } from "react";
 
 const steps = [
-  ["01", "Open book", "Start with a calm page made for visual noticing."],
-  ["02", "Scan page", "Point the Tingle app at the sketch you want to learn."],
-  ["03", "Unlock card", "AI turns the page into a focused memory card."],
-  ["04", "Build word", "Use tactile blocks to connect sound, shape, and spelling."],
+  ["01", "Build word", "Use tactile blocks to connect sound, shape, and spelling."],
+  ["02", "Open card", "Find the calm online sketch card for the word."],
+  ["03", "Choose color", "Pick the quiet color cue that feels easiest to remember."],
+  ["04", "Hear & connect", "Link pronunciation, meaning, sketch, and spelling."],
   ["05", "Review", "Short recall games bring the word back at the right moment."],
 ];
 
 const ecosystem = [
-  ["01", "Tingle app", "Scan a page and carry your visual memories anywhere.", "Scan"],
+  ["01", "Tingle app", "Explore sketch cards, hear pronunciation, and choose your memory cue.", "Choose"],
   ["02", "Sketch memory book", "Quiet, hand-drawn pages give every word room to stick.", "Notice"],
   ["03", "Word blocks", "Build spelling with warm wood and your chosen color cue.", "Build"],
   ["04", "Recall games", "Simple, low-pressure reviews turn recognition into recall.", "Remember"],
@@ -56,10 +56,10 @@ export default function Home() {
           <div className="relative z-10 max-w-[650px]">
             <p className="eyebrow"><span className="eyebrow-dot" /> AI visual memory learning</p>
             <h1 className="mt-7 font-serif text-[clamp(4.2rem,8.5vw,8.4rem)] font-normal leading-[0.84] tracking-[-0.07em]">
-              Scan it.<br />Learn it.<br /><em className="relative not-italic text-tingle-orange">Remember it.<span className="sketch-underline" aria-hidden="true" /></em>
+              Build it.<br />Choose it.<br /><em className="relative not-italic text-tingle-orange">Remember it.<span className="sketch-underline" aria-hidden="true" /></em>
             </h1>
             <p className="mt-9 max-w-[560px] text-lg leading-8 text-tingle-muted sm:text-xl">
-              Tingle turns pages from a physical sketch memory book into personal, AI-powered cards that help English words stay with you.
+              Tingle connects safe wooden word building with calm online memory cards and personal color cues—so English words are easier to recognize and recall.
             </p>
             <div className="mt-10 flex flex-wrap items-center gap-4">
               <a className="button" href="#early-access">Join early access <span aria-hidden="true">→</span></a>
@@ -69,25 +69,25 @@ export default function Home() {
           </div>
           <div className="relative lg:-mr-28">
             <div className="hero-image-wrap">
-              <Image src="/tingle-memory-journey.png" alt="A sketch memory book becoming a sun memory card through the Tingle app, with wooden letter blocks spelling sun" width={1536} height={1024} priority className="h-auto w-full" />
+              <Image src="/tingle-build-memory-v2.png" alt="A wooden word board with blocks spelling sun beside a calm sun memory card" width={1536} height={1024} priority className="h-auto w-full" />
             </div>
-            <div className="float-note float-note-top"><span>01</span> Scan a sketch</div>
-            <div className="float-note float-note-bottom"><span>02</span> Make it yours</div>
+            <div className="float-note float-note-top"><span>01</span> Build it by hand</div>
+            <div className="float-note float-note-bottom"><span>02</span> Choose your cue</div>
           </div>
         </div>
       </section>
 
       <section className="border-y border-black/5 bg-tingle-paper py-8">
         <div className="mx-auto flex max-w-[1240px] flex-col items-center justify-between gap-5 px-5 text-center sm:px-8 md:flex-row md:text-left">
-          <p className="font-serif text-2xl leading-tight sm:text-3xl">A book in your hands. A memory that travels.</p>
-          <p className="max-w-xl text-base leading-7 text-tingle-muted">The page keeps learning tangible. The app makes each memory personal, portable, and ready to revisit.</p>
+          <p className="font-serif text-2xl leading-tight sm:text-3xl">A word in your hands. A memory that travels.</p>
+          <p className="max-w-xl text-base leading-7 text-tingle-muted">The board makes learning tangible. Online cards make each memory personal, portable, and ready to revisit.</p>
         </div>
       </section>
 
       <section id="how" className="section-shell">
         <div className="section-heading">
           <div><p className="section-number">01 / HOW IT WORKS</p><h2>From page to <em>lasting recall.</em></h2></div>
-          <p>One gentle flow connects seeing, scanning, spelling, and remembering—without adding noise.</p>
+          <p>One gentle flow connects building, choosing, listening, and remembering—without adding noise.</p>
         </div>
         <div className="mt-14 grid gap-3 md:grid-cols-5">
           {steps.map(([number, title, body], index) => (
@@ -184,17 +184,17 @@ export default function Home() {
           <div>
             <span className="coming-pill">COMING NEXT · PHASE 2</span>
             <h2 className="mt-7 font-serif text-[clamp(3rem,5.4vw,5.6rem)] leading-[0.95] tracking-[-0.05em]">Draw your own<br /><em>memory card.</em></h2>
-            <p className="mt-7 max-w-xl text-lg leading-8 text-tingle-muted">Soon, learners will be able to draw a personal cue and turn it into a reusable memory card. For now, Tingle stays focused: scan the book, unlock the card, build the word, remember it.</p>
+            <p className="mt-7 max-w-xl text-lg leading-8 text-tingle-muted">Soon, learners will be able to draw a personal cue and turn it into a reusable memory card. For now, Tingle stays focused: build the word, open the card, choose a cue, remember it.</p>
           </div>
-          <div className="phase-divider"><span className="phase active"><b>Now</b> Scan & remember</span><span className="phase-line" /><span className="phase"><b>Next</b> Draw your own</span></div>
+          <div className="phase-divider"><span className="phase active"><b>Now</b> Build & remember</span><span className="phase-line" /><span className="phase"><b>Next</b> Draw your own</span></div>
         </div>
       </section>
 
       <section className="section-shell py-20 sm:py-28">
         <div className="launch-strip">
-          <div><p className="section-number">FIRST CHAPTER</p><h2>Japan + Korea, first.</h2></div>
-          <p>Tingle begins where deep learning culture meets a love of thoughtful design—then grows with the learners who shape it.</p>
-          <div className="country-marks" aria-label="Launching first in Japan and Korea"><span>JP</span><span>KR</span></div>
+          <div><p className="section-number">MADE FOR EVERY LEARNER</p><h2>Words belong to everyone.</h2></div>
+          <p>Tingle is designed for learners everywhere—at home, in classrooms, and wherever a new word becomes part of daily life.</p>
+          <div className="country-marks" aria-label="For learning at home, in class, and anywhere"><span>HOME</span><span>CLASS</span></div>
         </div>
       </section>
 
@@ -202,7 +202,7 @@ export default function Home() {
         <div className="cta-panel">
           <p className="section-number text-orange-200">EARLY ACCESS</p>
           <h2 className="mt-5 font-serif text-[clamp(3.5rem,7vw,7.4rem)] leading-[0.86] tracking-[-0.06em] text-white">Make words<br /><em className="text-tingle-orange">stay with you.</em></h2>
-          <p className="mx-auto mt-8 max-w-2xl text-lg leading-8 text-white/65">Be among the first families, teachers, and learning partners to experience Tingle in Japan and Korea.</p>
+          <p className="mx-auto mt-8 max-w-2xl text-lg leading-8 text-white/65">Be among the first learners, families, teachers, and learning partners to experience Tingle—wherever you are.</p>
           {submitted ? (
             <div className="success-note" role="status"><span>✓</span><div><strong>You’re on the early list.</strong><p>We’ll keep the next step simple.</p></div></div>
           ) : (
@@ -217,7 +217,7 @@ export default function Home() {
       </section>
 
       <footer className="mx-auto flex max-w-[1240px] flex-col justify-between gap-8 px-5 py-10 text-sm text-tingle-muted sm:px-8 md:flex-row md:items-end">
-        <div><a href="#top" className="wordmark">tingle<span>.</span></a><p className="mt-3">Scan it. Learn it. Remember it.</p></div>
+        <div><a href="#top" className="wordmark">tingle<span>.</span></a><p className="mt-3">Build it. Choose it. Remember it.</p></div>
         <div className="flex flex-wrap gap-x-8 gap-y-3"><a className="nav-link" href="#how">How it works</a><a className="nav-link" href="#color">Why color</a><a className="nav-link" href="#early-access">Early access</a></div>
         <p>© {new Date().getFullYear()} Tingle. Learning, made memorable.</p>
       </footer>
