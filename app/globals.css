@@ -99,6 +99,11 @@ a { color: inherit; text-decoration: none; }
 .word-blocks span { display: grid; width: clamp(3.7rem, 8vw, 5.5rem); aspect-ratio: 1; place-items: center; border: 1px solid #d2b995; border-radius: 1rem; background: linear-gradient(135deg, #f6dfba, #d8b27e); color: #58442b; font-family: Georgia, serif; font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 700; box-shadow: inset -6px -7px 12px rgba(112,76,32,.12), 0 14px 24px rgba(92,65,32,.14); transform: rotate(var(--r, -2deg)); }
 .word-blocks span:nth-child(even) { --r: 3deg; transform: translateY(-10px) rotate(var(--r)); }
 .word-blocks .accent-block { border-color: #ff9d40; background: linear-gradient(135deg, #ffa44c, #ee6900); color: white; }
+.kit-details { display: grid; grid-column: 1 / -1; gap: .8rem; border-top: 1px solid rgba(39,37,34,.11); padding-top: 2rem; }
+.kit-detail { min-height: 210px; border: 1px solid rgba(39,37,34,.09); border-radius: 1.35rem; background: rgba(255,252,247,.64); padding: 1.35rem; }
+.kit-detail > span { color: var(--orange); font-size: .7rem; font-weight: 900; letter-spacing: .16em; }
+.kit-detail h3 { margin-top: 2.3rem; font-family: Georgia, "Times New Roman", serif; font-size: 1.55rem; font-weight: 400; letter-spacing: -.035em; }
+.kit-detail p { margin-top: .75rem; color: var(--muted); font-size: .9rem; line-height: 1.65; }
 
 .coming-panel { position: relative; display: grid; gap: 4rem; overflow: hidden; border: 1px dashed rgba(39,37,34,.22); border-radius: 2.5rem; background: linear-gradient(135deg, rgba(255,255,255,.72), rgba(255,245,232,.92)); padding: clamp(2rem, 6vw, 5rem); }
 .coming-panel:after { content: "02"; position: absolute; right: -2rem; top: -5rem; color: rgba(255,122,0,.055); font-family: Georgia, serif; font-size: 24rem; line-height: 1; }
@@ -135,7 +140,12 @@ a { color: inherit; text-decoration: none; }
 }
 @media (min-width: 1024px) {
   .blocks-panel { grid-template-columns: 1fr 1fr; align-items: center; }
+  .kit-details { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .coming-panel { grid-template-columns: 1.15fr .85fr; align-items: center; }
+}
+
+@media (min-width: 1100px) {
+  .kit-details { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 @media (max-width: 767px) {
   .button-small { min-height: 40px; padding-inline: .9rem; }

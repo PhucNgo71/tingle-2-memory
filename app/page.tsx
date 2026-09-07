@@ -183,13 +183,27 @@ export default function Home() {
           <div className="max-w-xl">
             <p className="section-number">05 / TINGLE WORD BOARD</p>
             <h2 className="mt-5 font-serif text-[clamp(3rem,5vw,5.2rem)] leading-[0.95] tracking-[-0.05em]">Build the word.<br /><em>Feel the recall.</em></h2>
-            <p className="mt-7 text-lg leading-8 text-tingle-muted">The A2 wooden rail board gives learners room to build longer words by hand. Its rail-guided placement keeps safe, smooth blocks in line—without magnets.</p>
+            <p className="mt-7 text-lg leading-8 text-tingle-muted">The physical Tingle kit brings together an A2 rail board, a wooden storage box, alphabet blocks, and seven color cue blocks. Learners open the box, build a word by hand, then continue with its online memory card.</p>
             <ul className="mt-8 grid gap-3 sm:grid-cols-2">
               {["A2 rail board, no magnet", "Safe, rounded natural wood", "Wood alphabet blocks", "7 color cue blocks"].map(item => <li className="check-item" key={item}><span>✓</span>{item}</li>)}
             </ul>
           </div>
           <div className="word-blocks" aria-label="Wooden letter blocks spelling Tingle">
             {["T", "I", "N", "G", "L", "E"].map((letter, index) => <span key={letter + index} className={index === 1 || index === 5 ? "accent-block" : ""}>{letter}</span>)}
+          </div>
+          <div className="kit-details" aria-label="What comes in the physical Tingle kit">
+            {[
+              ["01", "A2 Word Board", "Two wooden rails keep letters aligned and give longer English words room to grow. No magnets are needed."],
+              ["02", "Wooden storage box", "A dedicated box keeps alphabet and color pieces together between sessions, ready for the next word."],
+              ["03", "Physical alphabet blocks", "Smooth wooden faces and rounded edges make each letter comfortable to pick up, place, and rearrange."],
+              ["04", "Seven color cue blocks", "The physical color set connects the word in the learner’s hands with the personal cue selected in the app."],
+            ].map(([number, title, body]) => (
+              <article className="kit-detail" key={title}>
+                <span>{number}</span>
+                <h3>{title}</h3>
+                <p>{body}</p>
+              </article>
+            ))}
           </div>
         </div>
       </section>
