@@ -4,16 +4,17 @@ import Image from "next/image";
 import { FormEvent, useState } from "react";
 
 const steps = [
-  ["01", "Build word", "Use tactile blocks to connect sound, shape, and spelling."],
-  ["02", "Open card", "Find the calm online sketch card for the word."],
-  ["03", "Choose color", "Pick the quiet color cue that feels easiest to remember."],
-  ["04", "Hear & connect", "Link pronunciation, meaning, sketch, and spelling."],
-  ["05", "Review", "Short recall games bring the word back at the right moment."],
+  ["01", "Build word", "Arrange safe magnetic wooden letters on the Tingle board."],
+  ["02", "Scan letters", "Use the app to recognize the arranged letters—not a drawing."],
+  ["03", "Hear it", "Listen to clear pronunciation and connect sound with spelling."],
+  ["04", "Open card", "Unlock the online sketch card with meaning and examples."],
+  ["05", "Choose color", "Pick the quiet in-app color cue that feels easiest to remember."],
+  ["06", "Review", "Simple recall games bring the word back at the right moment."],
 ];
 
 const ecosystem = [
-  ["01", "Tingle Word Board", "An A2 wooden rail board holds longer words securely—without magnets.", "Build"],
-  ["02", "Wood & color blocks", "Rounded alphabet blocks and seven color cue blocks make learning safe and tactile.", "Touch"],
+  ["01", "Tingle Word Board", "An A2 word-building surface gives safe magnetic wooden letters room to form longer words.", "Build"],
+  ["02", "Letter scan", "The app recognizes the arranged wooden letters and opens the learning flow.", "Scan"],
   ["03", "Online memory cards", "Sketch, pronunciation, meaning, and examples come together; color is chosen in the app.", "Choose"],
   ["04", "Recall games", "Simple, low-pressure reviews turn recognition into recall without overbuilding the experience.", "Remember"],
 ];
@@ -59,10 +60,10 @@ export default function Home() {
           <div className="relative z-10 max-w-[650px]">
             <p className="eyebrow"><span className="eyebrow-dot" /> AI visual memory learning</p>
             <h1 className="mt-7 font-serif text-[clamp(4.2rem,8.5vw,8.4rem)] font-normal leading-[0.84] tracking-[-0.07em]">
-              Build it.<br />Choose it.<br /><em className="relative not-italic text-tingle-orange">Remember it.<span className="sketch-underline" aria-hidden="true" /></em>
+              Build it.<br />Scan it.<br /><em className="relative not-italic text-tingle-orange">Remember it.<span className="sketch-underline" aria-hidden="true" /></em>
             </h1>
             <p className="mt-9 max-w-[560px] text-lg leading-8 text-tingle-muted sm:text-xl">
-              Tingle pairs a safe A2 wooden rail board with calm online memory cards and personal color choice in the app—so English words are easier to recognize and recall.
+              Build English words with safe magnetic wooden blocks. Scan the arranged letters in the app, hear the word, open its sketch memory card, and choose a personal color cue.
             </p>
             <div className="mt-10 flex flex-wrap items-center gap-4">
               <a className="button" href="#early-access">Join early access <span aria-hidden="true">→</span></a>
@@ -75,7 +76,7 @@ export default function Home() {
               <Image src="/tingle-build-memory-v2.png" alt="A wooden word board with blocks spelling sun beside a calm sun memory card" width={1536} height={1024} priority className="h-auto w-full" />
             </div>
             <div className="float-note float-note-top"><span>01</span> Build it by hand</div>
-            <div className="float-note float-note-bottom"><span>02</span> Choose your cue</div>
+            <div className="float-note float-note-bottom"><span>02</span> Scan the letters</div>
           </div>
         </div>
       </section>
@@ -83,19 +84,19 @@ export default function Home() {
       <section className="border-y border-black/5 bg-tingle-paper py-8">
         <div className="mx-auto flex max-w-[1240px] flex-col items-center justify-between gap-5 px-5 text-center sm:px-8 md:flex-row md:text-left">
           <p className="font-serif text-2xl leading-tight sm:text-3xl">Tingle helps learners build words offline and remember them online.</p>
-          <p className="max-w-xl text-base leading-7 text-tingle-muted"><strong className="text-tingle-charcoal">Block offline. Card online. Color chosen in app.</strong> One focused hybrid system for tangible learning and personal recall.</p>
+          <p className="max-w-xl text-base leading-7 text-tingle-muted"><strong className="text-tingle-charcoal">Build offline. Scan letters in app. Card online.</strong> Then choose a color cue and strengthen recall through short review games.</p>
         </div>
       </section>
 
       <section id="how" className="section-shell">
         <div className="section-heading">
           <div><p className="section-number">01 / HOW IT WORKS</p><h2>From building to <em>lasting recall.</em></h2></div>
-          <p>One gentle flow connects building, choosing, listening, and remembering—without adding noise.</p>
+          <p>One focused flow connects physical word building, letter recognition, pronunciation, visual memory, color choice, and recall.</p>
         </div>
-        <div className="mt-14 grid gap-3 md:grid-cols-5">
+        <div className="mt-14 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
           {steps.map(([number, title, body], index) => (
             <article className="step-card" key={title}>
-              <div className="flex items-center justify-between"><span className="step-number">{number}</span>{index < 4 && <span className="step-arrow" aria-hidden="true">→</span>}</div>
+              <div className="flex items-center justify-between"><span className="step-number">{number}</span>{index < steps.length - 1 && <span className="step-arrow" aria-hidden="true">→</span>}</div>
               <div><h3>{title}</h3><p>{body}</p></div>
             </article>
           ))}
@@ -183,9 +184,9 @@ export default function Home() {
           <div className="max-w-xl">
             <p className="section-number">05 / TINGLE WORD BOARD</p>
             <h2 className="mt-5 font-serif text-[clamp(3rem,5vw,5.2rem)] leading-[0.95] tracking-[-0.05em]">Build the word.<br /><em>Feel the recall.</em></h2>
-            <p className="mt-7 text-lg leading-8 text-tingle-muted">The physical Tingle kit brings together an A2 rail board, a wooden storage box, alphabet blocks, and seven color cue blocks. Learners open the box, build a word by hand, then continue with its online memory card.</p>
+            <p className="mt-7 text-lg leading-8 text-tingle-muted">The physical Tingle kit brings together an A2 word board, a wooden storage box, and safe magnetic alphabet blocks. Learners open the box, arrange a word by hand, then scan the letters to continue in the app.</p>
             <ul className="mt-8 grid gap-3 sm:grid-cols-2">
-              {["A2 rail board, no magnet", "Safe, rounded natural wood", "Wood alphabet blocks", "7 color cue blocks"].map(item => <li className="check-item" key={item}><span>✓</span>{item}</li>)}
+              {["A2 word-building board", "Safe, rounded natural wood", "Magnetic alphabet blocks", "Built for app letter scanning"].map(item => <li className="check-item" key={item}><span>✓</span>{item}</li>)}
             </ul>
           </div>
           <div className="word-blocks" aria-label="Wooden letter blocks spelling Tingle">
@@ -193,10 +194,10 @@ export default function Home() {
           </div>
           <div className="kit-details" aria-label="What comes in the physical Tingle kit">
             {[
-              ["01", "A2 Word Board", "Two wooden rails keep letters aligned and give longer English words room to grow. No magnets are needed."],
-              ["02", "Wooden storage box", "A dedicated box keeps alphabet and color pieces together between sessions, ready for the next word."],
-              ["03", "Physical alphabet blocks", "Smooth wooden faces and rounded edges make each letter comfortable to pick up, place, and rearrange."],
-              ["04", "Seven color cue blocks", "The physical color set connects the word in the learner’s hands with the personal cue selected in the app."],
+              ["01", "A2 Word Board", "A generous building area keeps arranged letters clear and gives longer English words room to grow."],
+              ["02", "Wooden storage box", "A dedicated box keeps the alphabet pieces together between sessions, ready for the next word."],
+              ["03", "Magnetic wooden blocks", "Safe, smooth letter pieces with rounded edges stay in position while learners build and scan."],
+              ["04", "Scan-ready arrangement", "Clear letter placement helps the app recognize the completed word before pronunciation and the online card open."],
             ].map(([number, title, body]) => (
               <article className="kit-detail" key={title}>
                 <span>{number}</span>
@@ -212,10 +213,10 @@ export default function Home() {
         <div className="coming-panel">
           <div>
             <span className="coming-pill">COMING NEXT · PHASE 2</span>
-            <h2 className="mt-7 font-serif text-[clamp(3rem,5.4vw,5.6rem)] leading-[0.95] tracking-[-0.05em]">Draw, scan & animate<br /><em>your own card.</em></h2>
-            <p className="mt-7 max-w-xl text-lg leading-8 text-tingle-muted">Later—not in Phase 1—learners will draw a personal cue, scan it, and use AI animation to turn it into a reusable memory card. For now, Tingle stays focused: build the word, open the card, choose a cue, remember it.</p>
+            <h2 className="mt-7 font-serif text-[clamp(3rem,5.4vw,5.6rem)] leading-[0.95] tracking-[-0.05em]">Draw Your Own<br /><em>belongs to Phase 2.</em></h2>
+            <p className="mt-7 max-w-xl text-lg leading-8 text-tingle-muted">Drawing is not a Phase 1 feature. Coming next: learners will scan their own drawings, use AI sketch cleanup, and bring those drawings to life with animation. Phase 1 scans arranged letters only.</p>
           </div>
-          <div className="phase-divider"><span className="phase active"><b>Now</b> Build & remember</span><span className="phase-line" /><span className="phase"><b>Next</b> Draw your own</span></div>
+          <div className="phase-divider"><span className="phase active"><b>Phase 1</b> Build · scan letters · remember</span><span className="phase-line" /><span className="phase"><b>Phase 2</b> Draw · clean · animate</span></div>
         </div>
       </section>
 
@@ -246,7 +247,7 @@ export default function Home() {
       </section>
 
       <footer className="mx-auto flex max-w-[1240px] flex-col justify-between gap-8 px-5 py-10 text-sm text-tingle-muted sm:px-8 md:flex-row md:items-end">
-        <div><a href="#top" className="brand-logo" aria-label="Tingle home"><Image src="/tingle-logo-official.jpg" alt="Tingle" width={100} height={100} className="brand-logo-image" /></a><p className="mt-3">Build offline. Remember online.</p></div>
+        <div><a href="#top" className="brand-logo" aria-label="Tingle home"><Image src="/tingle-logo-official.jpg" alt="Tingle" width={100} height={100} className="brand-logo-image" /></a><p className="mt-3">Build it. Scan it. Remember it.</p></div>
         <div className="flex flex-wrap gap-x-8 gap-y-3"><a className="nav-link" href="#how">How it works</a><a className="nav-link" href="#color">Why color</a><a className="nav-link" href="#early-access">Early access</a></div>
         <p>© {new Date().getFullYear()} Tingle. Learning, made memorable.</p>
       </footer>

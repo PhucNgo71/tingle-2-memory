@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Tingle — Build it. Choose it. Remember it.",
+  title: "Tingle — Build it. Scan it. Remember it.",
   description:
-    "Tingle connects safe wooden word building with online sketch memory cards and personalized color cues.",
+    "Build words with safe magnetic wooden blocks, scan the arranged letters, and remember them with online sketch cards and personal color cues.",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
