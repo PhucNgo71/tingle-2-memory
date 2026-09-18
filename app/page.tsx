@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { FormEvent, useState } from "react";
 
 const steps = [
@@ -13,7 +14,7 @@ const steps = [
 ];
 
 const ecosystem = [
-  ["01", "Tingle Word Board", "An A2 word-building surface gives safe magnetic wooden letters room to form longer words.", "Build"],
+  ["01", "Tingle Learning Box", "An organized physical kit keeps the word board, safe wooden letters, memory cards, and storage together.", "Build"],
   ["02", "Letter scan", "The app recognizes the arranged wooden letters and opens the learning flow.", "Scan"],
   ["03", "Online memory cards", "Sketch, pronunciation, meaning, and examples come together; color is chosen in the app.", "Choose"],
   ["04", "Recall games", "Simple, low-pressure reviews turn recognition into recall without overbuilding the experience.", "Remember"],
@@ -49,34 +50,43 @@ export default function Home() {
             <a className="nav-link" href="#how">How it works</a>
             <a className="nav-link" href="#color">Why color</a>
             <a className="nav-link" href="#ecosystem">Ecosystem</a>
+            <Link className="nav-link" href="/learn">Tingle Web</Link>
           </nav>
-          <a className="button button-small" href="#early-access">Get early access <span aria-hidden="true">↗</span></a>
+          <Link className="button button-small" href="/learn">Open Tingle Web <span aria-hidden="true">↗</span></Link>
         </div>
       </header>
 
       <section id="top" className="relative pt-[76px]">
         <div className="hero-glow" aria-hidden="true" />
-        <div className="mx-auto grid min-h-[760px] max-w-[1240px] items-center gap-8 px-5 py-16 sm:px-8 lg:grid-cols-[0.88fr_1.12fr] lg:py-20">
-          <div className="relative z-10 max-w-[650px]">
+        <div className="mx-auto grid min-h-[780px] max-w-[1320px] items-center gap-10 px-5 py-16 sm:px-8 lg:grid-cols-[0.92fr_1.08fr] lg:py-20">
+          <div className="hero-copy relative z-10 max-w-[650px]">
             <p className="eyebrow"><span className="eyebrow-dot" /> AI visual memory learning</p>
-            <h1 className="mt-7 font-serif text-[clamp(4.2rem,8.5vw,8.4rem)] font-normal leading-[0.84] tracking-[-0.07em]">
+            <h1 className="mt-7 font-serif text-[clamp(4rem,6.8vw,6.9rem)] font-normal leading-[0.86] tracking-[-0.07em]">
               Build it.<br />Scan it.<br /><em className="relative not-italic text-tingle-orange">Remember it.<span className="sketch-underline" aria-hidden="true" /></em>
             </h1>
             <p className="mt-9 max-w-[560px] text-lg leading-8 text-tingle-muted sm:text-xl">
               Build English words with safe magnetic wooden blocks. Scan the arranged letters in the app, hear the word, open its sketch memory card, and choose a personal color cue.
             </p>
             <div className="mt-10 flex flex-wrap items-center gap-4">
-              <a className="button" href="#early-access">Join early access <span aria-hidden="true">→</span></a>
-              <a className="text-link" href="#how">See how memory moves <span aria-hidden="true">↓</span></a>
+              <Link className="button" href="/learn">Try the web experience <span aria-hidden="true">→</span></Link>
+              <a className="text-link" href="#early-access">Join early access <span aria-hidden="true">↓</span></a>
             </div>
             <p className="mt-8 flex items-center gap-3 text-sm font-semibold text-tingle-muted"><span className="tiny-mark">CUE</span> One color. One personal connection. Another way back to the word.</p>
           </div>
-          <div className="relative lg:-mr-28">
-            <div className="hero-image-wrap">
-              <Image src="/tingle-build-memory-v2.png" alt="A wooden word board with blocks spelling sun beside a calm sun memory card" width={1536} height={1024} priority className="h-auto w-full" />
+          <div className="hero-product-stage">
+            <div className="hero-product-topline">
+              <span>The Tingle Learning Box</span>
+              <small>Phase 1</small>
             </div>
-            <div className="float-note float-note-top"><span>01</span> Build it by hand</div>
-            <div className="float-note float-note-bottom"><span>02</span> Scan the letters</div>
+            <div className="hero-image-wrap">
+              <Image src="/tingle-learning-box-v1.png" alt="An open natural wooden Tingle Learning Box with alphabet blocks, a two-rail word board, memory cards, and a storage pouch" width={1536} height={1024} priority sizes="(max-width: 1024px) 100vw, 58vw" className="h-auto w-full" />
+            </div>
+            <div className="hero-flow" aria-label="Build, scan, and remember">
+              <div className="hero-flow-line" aria-hidden="true"><i /></div>
+              <span><b>01</b> Build</span>
+              <span><b>02</b> Scan letters</span>
+              <span><b>03</b> Remember</span>
+            </div>
           </div>
         </div>
       </section>
@@ -84,7 +94,7 @@ export default function Home() {
       <section className="border-y border-black/5 bg-tingle-paper py-8">
         <div className="mx-auto flex max-w-[1240px] flex-col items-center justify-between gap-5 px-5 text-center sm:px-8 md:flex-row md:text-left">
           <p className="font-serif text-2xl leading-tight sm:text-3xl">Tingle helps learners build words offline and remember them online.</p>
-          <p className="max-w-xl text-base leading-7 text-tingle-muted"><strong className="text-tingle-charcoal">Build offline. Scan letters in app. Card online.</strong> Then choose a color cue and strengthen recall through short review games.</p>
+          <p className="max-w-xl text-base leading-7 text-tingle-muted"><strong className="text-tingle-charcoal">2,000 words. Seven personal cues. Recall that grows with you.</strong> Explore the web library, hear each word, build it, and begin with playable Word Bingo.</p>
         </div>
       </section>
 
@@ -182,22 +192,26 @@ export default function Home() {
       <section className="section-shell">
         <div className="blocks-panel">
           <div className="max-w-xl">
-            <p className="section-number">05 / TINGLE WORD BOARD</p>
-            <h2 className="mt-5 font-serif text-[clamp(3rem,5vw,5.2rem)] leading-[0.95] tracking-[-0.05em]">Build the word.<br /><em>Feel the recall.</em></h2>
-            <p className="mt-7 text-lg leading-8 text-tingle-muted">The physical Tingle kit brings together an A2 word board, a wooden storage box, and safe magnetic alphabet blocks. Learners open the box, arrange a word by hand, then scan the letters to continue in the app.</p>
+            <p className="section-number">05 / TINGLE LEARNING BOX</p>
+            <h2 className="mt-5 font-serif text-[clamp(3rem,5vw,5.2rem)] leading-[0.95] tracking-[-0.05em]">Everything together.<br /><em>Ready to remember.</em></h2>
+            <p className="mt-7 text-lg leading-8 text-tingle-muted">The Tingle Learning Box organizes the complete physical experience: rounded wooden letters, a two-rail word board, sketch memory cards, and simple storage. Build the word by hand, then scan the arranged letters to continue in the app.</p>
             <ul className="mt-8 grid gap-3 sm:grid-cols-2">
-              {["A2 word-building board", "Safe, rounded natural wood", "Magnetic alphabet blocks", "Built for app letter scanning"].map(item => <li className="check-item" key={item}><span>✓</span>{item}</li>)}
+              {["Organized alphabet library", "Safe, rounded natural wood", "Two-rail word board", "Built for app letter scanning"].map(item => <li className="check-item" key={item}><span>✓</span>{item}</li>)}
             </ul>
           </div>
-          <div className="word-blocks" aria-label="Wooden letter blocks spelling Tingle">
-            {["T", "I", "N", "G", "L", "E"].map((letter, index) => <span key={letter + index} className={index === 1 || index === 5 ? "accent-block" : ""}>{letter}</span>)}
+          <div className="learning-box-visual">
+            <Image src="/tingle-learning-box-v1.png" alt="An open natural wooden Tingle Learning Box with organized alphabet blocks, a two-rail word board spelling play, memory cards, and a storage pouch" width={1536} height={1024} className="h-auto w-full" />
+            <div className="seven-cue-legend" aria-label="Seven personal memory cue colors">
+              <span>Seven memory cues</span>
+              <div>{cueOptions.map(option => <i key={option.name} title={option.name} style={{ backgroundColor: option.color }} />)}</div>
+            </div>
           </div>
           <div className="kit-details" aria-label="What comes in the physical Tingle kit">
             {[
-              ["01", "A2 Word Board", "A generous building area keeps arranged letters clear and gives longer English words room to grow."],
-              ["02", "Wooden storage box", "A dedicated box keeps the alphabet pieces together between sessions, ready for the next word."],
-              ["03", "Magnetic wooden blocks", "Safe, smooth letter pieces with rounded edges stay in position while learners build and scan."],
-              ["04", "Scan-ready arrangement", "Clear letter placement helps the app recognize the completed word before pronunciation and the online card open."],
+              ["01", "Organized wooden box", "Dedicated compartments keep the alphabet, board, cards, and pouch ready for the next learning session."],
+              ["02", "Two-rail word board", "The removable board keeps arranged letters clear, aligned, and easy for the app to recognize."],
+              ["03", "Rounded wooden blocks", "Safe, tactile letter pieces add a personal cue-color accent without losing the warmth of natural wood."],
+              ["04", "Sketch memory cards", "Calm cards connect the completed word with pronunciation, meaning, an example, and seven cue choices."],
             ].map(([number, title, body]) => (
               <article className="kit-detail" key={title}>
                 <span>{number}</span>
@@ -242,13 +256,14 @@ export default function Home() {
               <button type="submit">Request early access <span aria-hidden="true">→</span></button>
             </form>
           )}
+          <div className="mt-7"><Link className="text-link border-white/30 text-white" href="/learn">Or open Tingle Web now <span aria-hidden="true">↗</span></Link></div>
           <p className="mt-4 text-xs text-white/40">A private Phase 1 preview. No noise, only meaningful updates.</p>
         </div>
       </section>
 
       <footer className="mx-auto flex max-w-[1240px] flex-col justify-between gap-8 px-5 py-10 text-sm text-tingle-muted sm:px-8 md:flex-row md:items-end">
         <div><a href="#top" className="brand-logo" aria-label="Tingle home"><Image src="/tingle-logo-official.jpg" alt="Tingle" width={100} height={100} className="brand-logo-image" /></a><p className="mt-3">Build it. Scan it. Remember it.</p></div>
-        <div className="flex flex-wrap gap-x-8 gap-y-3"><a className="nav-link" href="#how">How it works</a><a className="nav-link" href="#color">Why color</a><a className="nav-link" href="#early-access">Early access</a></div>
+        <div className="flex flex-wrap gap-x-8 gap-y-3"><a className="nav-link" href="#how">How it works</a><a className="nav-link" href="#color">Why color</a><Link className="nav-link" href="/learn">Tingle Web</Link><a className="nav-link" href="#early-access">Early access</a></div>
         <p>© {new Date().getFullYear()} Tingle. Learning, made memorable.</p>
       </footer>
     </main>
