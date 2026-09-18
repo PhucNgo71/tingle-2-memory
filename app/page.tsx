@@ -44,7 +44,7 @@ export default function Home() {
       <header className="fixed inset-x-0 top-0 z-50 border-b border-black/5 bg-[#fffaf2]/90 backdrop-blur-xl">
         <div className="mx-auto flex h-[76px] max-w-[1240px] items-center justify-between px-5 sm:px-8">
           <a href="#top" className="brand-logo" aria-label="Tingle home">
-            <Image src="/tingle-wordmark-hd.png" alt="Tingle" width={2172} height={724} className="brand-logo-image" priority />
+            <Image src="/tingle-wordmark-official.png" alt="Tingle" width={360} height={120} className="brand-logo-image" priority />
           </a>
           <nav className="hidden items-center gap-8 text-[0.9rem] font-semibold text-tingle-muted md:flex" aria-label="Main navigation">
             <a className="nav-link" href="#how">How it works</a>
@@ -262,7 +262,7 @@ export default function Home() {
       </section>
 
       <footer className="mx-auto flex max-w-[1240px] flex-col justify-between gap-8 px-5 py-10 text-sm text-tingle-muted sm:px-8 md:flex-row md:items-end">
-        <div><a href="#top" className="brand-logo" aria-label="Tingle home"><Image src="/tingle-wordmark-hd.png" alt="Tingle" width={2172} height={724} className="brand-logo-image" /></a><p className="mt-3">Build it. Scan it. Remember it.</p></div>
+        <div><a href="#top" className="brand-logo" aria-label="Tingle home"><Image src="/tingle-wordmark-official.png" alt="Tingle" width={360} height={120} className="brand-logo-image" /></a><p className="mt-3">Build it. Scan it. Remember it.</p></div>
         <div className="flex flex-wrap gap-x-8 gap-y-3"><a className="nav-link" href="#how">How it works</a><a className="nav-link" href="#color">Why color</a><Link className="nav-link" href="/learn">Tingle Web</Link><a className="nav-link" href="#early-access">Early access</a></div>
         <p>© {new Date().getFullYear()} Tingle. Learning, made memorable.</p>
       </footer>
