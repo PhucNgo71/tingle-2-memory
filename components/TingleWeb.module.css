@@ -6,8 +6,8 @@
   color: var(--ink);
 }
 .header { position: sticky; top: 0; z-index: 40; display: grid; grid-template-columns: 150px 1fr auto; align-items: center; min-height: 78px; border-bottom: 1px solid rgba(41,38,34,.09); background: rgba(255,252,247,.92); padding: 0 2rem; backdrop-filter: blur(18px); }
-.logoLink { display: flex; width: 100px; height: 48px; align-items: center; justify-content: center; overflow: hidden; border-radius: .75rem; }
-.logoLink img { width: 104px; height: 104px; max-width: none; object-fit: cover; }
+.logoLink { display: flex; width: 126px; height: 48px; align-items: center; justify-content: center; }
+.logoLink img { width: 126px; height: auto; object-fit: contain; }
 .nav { display: flex; justify-content: center; gap: .45rem; }
 .nav button { border: 0; border-radius: 999px; background: transparent; padding: .72rem 1rem; color: var(--muted); font-size: .84rem; font-weight: 800; cursor: pointer; }
 .nav button:hover, .nav .activeNav { background: #f4ebdf; color: var(--ink); }
@@ -120,7 +120,8 @@
 }
 @media (max-width:680px) {
   .header { min-height: auto; grid-template-columns: 1fr auto; padding: .4rem .8rem; }
-  .logoLink { width: 82px; height: 42px; }
+  .logoLink { width: 108px; height: 42px; }
+  .logoLink img { width: 108px; }
   .nav button { padding: .65rem .7rem; font-size: .7rem; }
   .nav button:nth-child(2) { display: none; }
   .sidebar { display: block; padding: 2rem 1.2rem; }
