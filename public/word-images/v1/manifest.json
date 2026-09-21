@@ -19061,14 +19061,14 @@
       "headword": "sun",
       "rank": 1361,
       "pack": 14,
-      "status": "not_started",
-      "alt": "Minimal line sketch representing the word “sun”.",
-      "cardPath": null,
-      "thumbnailPath": null,
+      "status": "approved",
+      "alt": "Warm colored-pencil sketch of a smiling yellow sun with orange rays.",
+      "cardPath": "/word-images/v1/packs/pack-14/TNG-1361.webp",
+      "thumbnailPath": "/word-images/v1/packs/pack-14/TNG-1361-thumb.webp",
       "expectedCardPath": "/word-images/v1/packs/pack-14/TNG-1361.webp",
       "expectedThumbnailPath": "/word-images/v1/packs/pack-14/TNG-1361-thumb.webp",
-      "checksumSha256": null,
-      "updatedAt": null
+      "checksumSha256": "a6a7d8746fefb3ee6bd0bd310cc1af11bfe9bc6e3a3a3cf182073336dd5ab8c6",
+      "updatedAt": "2026-09-21"
     },
     {
       "wordId": "TNG-1362",

@@ -217,10 +217,24 @@ export default function TingleWeb({ words }: { words: TingleWord[] }) {
 
             <article className={styles.memoryCard}>
               <span className={styles.cueBadge}>{cue.name} cue</span>
-              <div className={styles.sketchPlaceholder} aria-label={`Sketch space for ${selected.headword}`}>
-                <span>{selected.headword.slice(0, 1).toUpperCase()}</span>
-                <i aria-hidden="true" />
-              </div>
+              {selected.imagePath ? (
+                <div className={styles.sketchImageWrap}>
+                  <Image
+                    src={selected.imagePath}
+                    alt={`Tingle memory sketch for ${selected.headword}`}
+                    width={1600}
+                    height={1200}
+                    sizes="(max-width: 900px) 90vw, 720px"
+                    className={styles.sketchImage}
+                    priority={selected.wordId === initialWord.wordId}
+                  />
+                </div>
+              ) : (
+                <div className={styles.sketchPlaceholder} aria-label={`Sketch space for ${selected.headword}`}>
+                  <span>{selected.headword.slice(0, 1).toUpperCase()}</span>
+                  <i aria-hidden="true" />
+                </div>
+              )}
               <div className={styles.wordLine}>
                 <div><h2>{selected.headword}</h2><p>{selected.definition}</p></div>
                 <button type="button" onClick={speakWord} aria-label={`Pronounce ${selected.headword}`}>▶</button>
