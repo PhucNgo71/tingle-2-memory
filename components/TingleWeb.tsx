@@ -14,6 +14,8 @@ export interface TingleWord {
   pack: number;
   definition: string;
   imagePath: string | null;
+  thumbnailPath: string | null;
+  imageAlt: string | null;
   imageStatus: string;
 }
 
@@ -221,7 +223,7 @@ export default function TingleWeb({ words }: { words: TingleWord[] }) {
                 <div className={styles.sketchImageWrap}>
                   <Image
                     src={selected.imagePath}
-                    alt={`Tingle memory sketch for ${selected.headword}`}
+                    alt={selected.imageAlt ?? `Tingle memory sketch for ${selected.headword}`}
                     width={1600}
                     height={1200}
                     sizes="(max-width: 900px) 90vw, 720px"
@@ -325,7 +327,7 @@ export default function TingleWeb({ words }: { words: TingleWord[] }) {
                 <strong>{word.headword}</strong>
                 <span>{word.definition}</span>
                 <small>{String(word.pack).padStart(2, "0")}</small>
-                <small className={progress[word.wordId]?.remembered ? styles.doneStatus : ""}>{progress[word.wordId]?.remembered ? "Remembered" : progress[word.wordId] ? `${progress[word.wordId].cue} cue` : "New"}</small>
+                <small className={progress[word.wordId]?.remembered ? styles.doneStatus : ""}>{progress[word.wordId]?.remembered ? "Remembered" : progress[word.wordId] ? `${progress[word.wordId].cue} cue` : word.imageStatus === "approved" ? "Sketch ready" : "New"}</small>
                 <i>→</i>
               </button>
             ))}

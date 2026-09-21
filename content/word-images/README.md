@@ -12,6 +12,12 @@ This directory defines the production workflow for the 2,000 Phase 1 sketch memo
 
 The repository stores files by stable Tingle word ID. A headword may be edited without breaking an app reference.
 
+## Runtime integration
+
+`public/word-images/v1/manifest.json` is the source of truth for artwork shown in Tingle Web. The `/learn` page joins manifest records to the word catalogue by `wordId` at build time and exposes artwork only when the manifest status is `approved` and both files and a checksum are present. The checksum is added to the image URL as a cache version, so replacing approved artwork cannot leave an older image or letter placeholder in the browser.
+
+The validation command also verifies that catalogue identity, rank, pack, approval status, and public image path agree with the manifest.
+
 ## Visual rule
 
 Each word has one calm, neutral sketch master. Do not create seven image copies for the seven memory colors. The learner-selected color cue is applied by the app as a separate interface layer, so the original sketch remains reusable and visually quiet.
@@ -31,4 +37,3 @@ Only an `approved` record may expose `cardPath` and `thumbnailPath`. Draft sourc
 - Integrity: set the SHA-256 checksum when the image is approved.
 
 Run `pnpm validate:image-store` before publishing image updates.
-
