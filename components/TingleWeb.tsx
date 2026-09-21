@@ -52,6 +52,7 @@ export default function TingleWeb({ words }: { words: TingleWord[] }) {
   const [query, setQuery] = useState("");
   const [pack, setPack] = useState<number | "all">("all");
   const [progress, setProgress] = useState<Progress>({});
+  const [cardFlipped, setCardFlipped] = useState(false);
   const [builtIds, setBuiltIds] = useState<number[]>([]);
   const [answer, setAnswer] = useState<string | null>(null);
   const [bingoSeed, setBingoSeed] = useState(0);
@@ -74,6 +75,7 @@ export default function TingleWeb({ words }: { words: TingleWord[] }) {
   }, []);
 
   useEffect(() => {
+    setCardFlipped(false);
     setBuiltIds([]);
     setAnswer(null);
   }, [selectedId]);
@@ -211,36 +213,57 @@ export default function TingleWeb({ words }: { words: TingleWord[] }) {
 
           <section className={styles.learningStage}>
             <div className={styles.cardHeader}>
-              <div><p className={styles.kicker}>MEMORY CARD / {selected.wordId}</p><p>One sketch. One chosen cue.</p></div>
-              <button type="button" className={selectedProgress?.remembered ? styles.remembered : styles.rememberButton} onClick={toggleRemembered}>
-                {selectedProgress?.remembered ? "✓ Remembered" : "+ Mark remembered"}
-              </button>
+              <div><p className={styles.kicker}>DEMO FLASHCARD / {selected.wordId}</p><p>Picture first. Answer second. Recall before you flip.</p></div>
+              <div className={styles.cardActions}>
+                <span className={styles.demoPill}>Interactive demo</span>
+                <button type="button" className={selectedProgress?.remembered ? styles.remembered : styles.rememberButton} onClick={toggleRemembered}>
+                  {selectedProgress?.remembered ? "✓ Remembered" : "+ Mark remembered"}
+                </button>
+              </div>
             </div>
 
-            <article className={styles.memoryCard}>
+            <article className={`${styles.memoryCard} ${selected.imagePath ? styles.hasArtwork : ""}`}>
               <span className={styles.cueBadge}>{cue.name} cue</span>
-              {selected.imagePath ? (
-                <div className={styles.sketchImageWrap}>
-                  <Image
-                    src={selected.imagePath}
-                    alt={selected.imageAlt ?? `Tingle memory sketch for ${selected.headword}`}
-                    width={1600}
-                    height={1200}
-                    sizes="(max-width: 900px) 90vw, 720px"
-                    className={styles.sketchImage}
-                    priority={selected.wordId === initialWord.wordId}
-                  />
+              {!cardFlipped ? (
+                <div className={styles.flashcardPanel} key={`front-${selected.wordId}`} aria-live="polite">
+                  {selected.imagePath ? (
+                    <div className={styles.sketchImageWrap}>
+                      <Image
+                        src={selected.imagePath}
+                        alt={selected.imageAlt ?? `Tingle memory sketch for ${selected.headword}`}
+                        width={1600}
+                        height={1200}
+                        sizes="(max-width: 900px) 90vw, 720px"
+                        className={styles.sketchImage}
+                        priority={selected.wordId === initialWord.wordId}
+                      />
+                    </div>
+                  ) : (
+                    <div className={styles.sketchPlaceholder} aria-label={`Sketch space for ${selected.headword}`}>
+                      <span>{selected.headword.slice(0, 1).toUpperCase()}</span>
+                      <i aria-hidden="true" />
+                    </div>
+                  )}
+                  <div className={styles.flashcardPrompt}>
+                    <div><span>LOOK &amp; RECALL</span><strong>What word is this?</strong></div>
+                    <button type="button" onClick={() => setCardFlipped(true)}>Reveal answer <span aria-hidden="true">↻</span></button>
+                  </div>
                 </div>
               ) : (
-                <div className={styles.sketchPlaceholder} aria-label={`Sketch space for ${selected.headword}`}>
-                  <span>{selected.headword.slice(0, 1).toUpperCase()}</span>
-                  <i aria-hidden="true" />
+                <div className={styles.flashcardPanel} key={`back-${selected.wordId}`} aria-live="polite">
+                  <div className={styles.flashcardAnswer}>
+                    <p className={styles.kicker}>ANSWER</p>
+                    <h2>{selected.headword}</h2>
+                    <p>{selected.definition}</p>
+                    <button type="button" onClick={speakWord} aria-label={`Hear the pronunciation of ${selected.headword}`}><span aria-hidden="true">▶</span> Hear pronunciation</button>
+                    <small><i style={{ backgroundColor: cue.color }} /> Your saved cue is {cue.name.toLowerCase()}.</small>
+                  </div>
+                  <div className={styles.flashcardPrompt}>
+                    <div><span>ANSWER SIDE</span><strong>Did you remember it?</strong></div>
+                    <button type="button" onClick={() => setCardFlipped(false)}>Show picture <span aria-hidden="true">↻</span></button>
+                  </div>
                 </div>
               )}
-              <div className={styles.wordLine}>
-                <div><h2>{selected.headword}</h2><p>{selected.definition}</p></div>
-                <button type="button" onClick={speakWord} aria-label={`Pronounce ${selected.headword}`}>▶</button>
-              </div>
             </article>
 
             <div className={styles.cuePicker}>
