@@ -166,7 +166,7 @@ export default function TingleWeb({ words }: { words: TingleWord[] }) {
     <main className={styles.shell} style={{ "--cue": cue.color, "--cue-soft": cue.soft } as React.CSSProperties}>
       <header className={styles.header}>
         <Link href="/" className={styles.logoLink} aria-label="Tingle landing page">
-          <Image src="/tingle-wordmark-official.png" alt="Tingle" width={360} height={120} priority />
+          <Image src="/tingle-wordmark-spark-v3.png" alt="Tingle" width={1774} height={887} priority />
         </Link>
         <nav className={styles.nav} aria-label="Tingle Web sections">
           {(["learn", "library", "games"] as View[]).map((item) => (
