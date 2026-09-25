@@ -25,7 +25,7 @@
 .learnLayout { display: grid; grid-template-columns: minmax(260px,350px) minmax(0,1fr); min-height: calc(100vh - 78px); }
 .sidebar { position: sticky; top: 78px; align-self: start; height: calc(100vh - 78px); display: flex; flex-direction: column; border-right: 1px solid rgba(41,38,34,.09); background: #fffdf8; padding: 3.25rem 2rem 2rem; }
 .kicker { color: #f06f00; font-size: .67rem; font-weight: 900; letter-spacing: .17em; }
-.sidebar h1 { margin-top: 1rem; font-family: Georgia,serif; font-size: clamp(3.5rem,6vw,6.6rem); font-weight: 400; line-height: .9; letter-spacing: -.065em; }
+.sidebar h1 { margin-top: 1rem; font-family: var(--font-nunito),"Avenir Next Rounded","Arial Rounded MT Bold",sans-serif; font-size: clamp(3.5rem,6vw,6.6rem); font-weight: 700; line-height: .9; letter-spacing: -.065em; }
 .definition { margin-top: 1.3rem; color: var(--muted); font-size: .96rem; line-height: 1.7; }
 .speakButton { display: flex; width: 100%; align-items: center; gap: .8rem; margin-top: 2.4rem; border: 0; border-radius: 1rem; background: var(--ink); padding: .85rem; color: white; font-weight: 800; cursor: pointer; box-shadow: 0 12px 28px rgba(41,38,34,.13); transition: transform 180ms ease,box-shadow 180ms ease; }
 .speakButton:hover { transform: translateY(-2px); box-shadow: 0 17px 34px rgba(41,38,34,.18); }
@@ -60,19 +60,19 @@
 .cueBadge { position: relative; z-index: 2; align-self: flex-end; border-radius: 999px; background: var(--cue); padding: .6rem .85rem; color: white; font-size: .65rem; font-weight: 900; letter-spacing: .12em; text-transform: uppercase; box-shadow: 0 8px 20px color-mix(in srgb,var(--cue),transparent 72%); animation: cueBreathe 3s ease-in-out infinite; }
 .flashcardPanel { position: relative; z-index: 1; flex: 1; display: flex; flex-direction: column; animation: flashcardTurn 320ms cubic-bezier(.2,.75,.25,1) both; }
 .sketchPlaceholder { position: relative; z-index: 1; flex: 1; display: grid; place-items: center; }
-.sketchPlaceholder span { color: var(--ink); font-family: Georgia,serif; font-size: clamp(10rem,24vw,18rem); line-height: .8; opacity: .88; text-shadow: 12px 10px 0 color-mix(in srgb,var(--cue),transparent 67%); }
+.sketchPlaceholder span { color: var(--ink); font-family: var(--font-nunito),"Avenir Next Rounded","Arial Rounded MT Bold",sans-serif; font-size: clamp(10rem,24vw,18rem); font-weight: 700; line-height: .8; opacity: .88; text-shadow: 12px 10px 0 color-mix(in srgb,var(--cue),transparent 67%); }
 .sketchPlaceholder i { position: absolute; width: 15rem; height: 3rem; bottom: 15%; border-bottom: 3px solid rgba(41,38,34,.22); border-radius: 50%; transform: rotate(-4deg); }
 .sketchImageWrap { position: relative; z-index: 1; flex: 1; display: grid; min-height: 390px; place-items: center; padding: 1rem 1.5rem; }
 .sketchImage { display: block; width: min(100%,680px); height: auto; max-height: 400px; border-radius: 1.6rem; object-fit: contain; mix-blend-mode: multiply; filter: drop-shadow(0 18px 24px rgba(74,49,22,.06)); animation: artworkFloat 5s ease-in-out infinite; }
 .flashcardPrompt { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; border-top: 1px solid rgba(41,38,34,.12); padding-top: 1.25rem; }
 .flashcardPrompt span { color: var(--muted); font-size: .62rem; font-weight: 900; letter-spacing: .14em; }
-.flashcardPrompt strong { display: block; margin-top: .35rem; font-family: Georgia,serif; font-size: 1.45rem; font-weight: 400; }
+.flashcardPrompt strong { display: block; margin-top: .35rem; font-family: var(--font-nunito),"Avenir Next Rounded","Arial Rounded MT Bold",sans-serif; font-size: 1.45rem; font-weight: 700; }
 .flashcardPrompt button { flex: none; border: 0; border-radius: 999px; background: var(--ink); padding: .9rem 1.15rem; color: white; font-size: .78rem; font-weight: 850; cursor: pointer; box-shadow: 0 10px 25px rgba(41,38,34,.16); transition: transform 180ms ease,box-shadow 180ms ease; }
 .flashcardPrompt button:hover { transform: translateY(-2px); box-shadow: 0 15px 30px rgba(41,38,34,.22); }
 .flashcardPrompt button:hover span { display: inline-block; transform: rotate(120deg); }
 .flashcardPrompt button span { margin-left: .35rem; color: #ffad60; font-size: 1rem; letter-spacing: 0; transition: transform 260ms ease; }
 .flashcardAnswer { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 3rem 1rem 2rem; text-align: center; }
-.flashcardAnswer h2 { margin-top: 1.25rem; font-family: Georgia,serif; font-size: clamp(5rem,11vw,9rem); font-weight: 400; line-height: .82; letter-spacing: -.065em; }
+.flashcardAnswer h2 { margin-top: 1.25rem; font-family: var(--font-nunito),"Avenir Next Rounded","Arial Rounded MT Bold",sans-serif; font-size: clamp(5rem,11vw,9rem); font-weight: 700; line-height: .82; letter-spacing: -.065em; }
 .flashcardAnswer > p:not(.kicker) { max-width: 540px; margin-top: 1.75rem; color: var(--muted); font-size: 1.12rem; line-height: 1.7; }
 .flashcardAnswer > button { display: inline-flex; align-items: center; gap: .65rem; margin-top: 2rem; border: 0; border-radius: 999px; background: var(--orange,#ff7a00); padding: .9rem 1.2rem; color: white; font-weight: 850; cursor: pointer; }
 .flashcardAnswer > button span { display: grid; width: 1.7rem; height: 1.7rem; place-items: center; border-radius: 50%; background: rgba(255,255,255,.2); font-size: .65rem; }
@@ -80,7 +80,7 @@
 .flashcardAnswer small i { width: .7rem; height: .7rem; border-radius: 50%; }
 @keyframes flashcardTurn { from { opacity: 0; transform: perspective(900px) rotateY(7deg) translateY(6px); } to { opacity: 1; transform: perspective(900px) rotateY(0) translateY(0); } }
 .wordLine { position: relative; z-index: 2; display: flex; align-items: end; justify-content: space-between; gap: 2rem; border-top: 1px solid rgba(41,38,34,.12); padding-top: 1.4rem; }
-.wordLine h2 { font-family: Georgia,serif; font-size: clamp(3.5rem,7vw,6.8rem); font-weight: 400; line-height: .86; letter-spacing: -.06em; }
+.wordLine h2 { font-family: var(--font-nunito),"Avenir Next Rounded","Arial Rounded MT Bold",sans-serif; font-size: clamp(3.5rem,7vw,6.8rem); font-weight: 700; line-height: .86; letter-spacing: -.06em; }
 .wordLine p { max-width: 600px; margin-top: .8rem; color: var(--muted); line-height: 1.6; }
 .wordLine button { display: grid; width: 3.4rem; height: 3.4rem; flex: none; place-items: center; border: 0; border-radius: 50%; background: var(--ink); color: white; cursor: pointer; }
 .cuePicker { display: flex; align-items: center; justify-content: space-between; gap: 2rem; margin-top: .9rem; border: 1px solid rgba(41,38,34,.08); border-radius: 1.3rem; background: rgba(255,255,255,.65); padding: 1.1rem 1.25rem; }
@@ -91,13 +91,13 @@
 .cueDots .activeCue { animation: selectedCue 2.2s ease-in-out infinite; }
 .practiceGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 3rem; }
 .practiceCard { display: flex; min-height: 430px; flex-direction: column; border: 1px solid rgba(41,38,34,.08); border-radius: 1.6rem; background: #fffdf9; padding: 1.5rem; }
-.practiceCard h3 { margin-top: .8rem; font-family: Georgia,serif; font-size: 2rem; font-weight: 400; letter-spacing: -.04em; }
+.practiceCard h3 { margin-top: .8rem; font-family: var(--font-nunito),"Avenir Next Rounded","Arial Rounded MT Bold",sans-serif; font-size: 2rem; font-weight: 700; letter-spacing: -.04em; }
 .buildRail { display: flex; min-height: 96px; align-items: center; justify-content: center; gap: .38rem; margin-top: 2rem; border-radius: 1.1rem; background: #f2e8da; padding: 1rem; box-shadow: inset 0 -7px 0 #dac7ad; }
-.buildRail span { display: grid; width: 3rem; height: 3.3rem; place-items: center; border: 1px dashed #c3aa8a; border-radius: .65rem; background: rgba(255,255,255,.45); color: #58442b; font-family: Georgia,serif; font-size: 1.35rem; font-weight: 700; }
+.buildRail span { display: grid; width: 3rem; height: 3.3rem; place-items: center; border: 1px dashed #c3aa8a; border-radius: .65rem; background: rgba(255,255,255,.45); color: #58442b; font-family: var(--font-nunito),"Avenir Next Rounded","Arial Rounded MT Bold",sans-serif; font-size: 1.35rem; font-weight: 800; }
 .buildRail .filledSlot { border-style: solid; background: linear-gradient(135deg,#fff3dc,#e9cda5); box-shadow: 0 7px 12px rgba(92,65,32,.13); animation: woodDrop 300ms cubic-bezier(.2,.9,.25,1.25) both; }
 .completeRail { box-shadow: inset 0 -7px 0 #8fc9b2,0 0 0 3px rgba(46,157,113,.08); animation: completedRail 650ms cubic-bezier(.2,.8,.2,1) both; }
 .letterTray { display: flex; flex-wrap: wrap; justify-content: center; gap: .45rem; margin-top: 1.4rem; }
-.letterTray button { position: relative; overflow: hidden; display: grid; width: 3rem; height: 3rem; place-items: center; border: 1px solid #d2b995; border-radius: .65rem; background: linear-gradient(135deg,#f6dfba,#d8b27e); color: #58442b; font-family: Georgia,serif; font-weight: 700; cursor: pointer; box-shadow: 0 8px 13px rgba(92,65,32,.12); transition: transform 150ms ease,box-shadow 150ms ease; }
+.letterTray button { position: relative; overflow: hidden; display: grid; width: 3rem; height: 3rem; place-items: center; border: 1px solid #d2b995; border-radius: .65rem; background: linear-gradient(135deg,#f6dfba,#d8b27e); color: #58442b; font-family: var(--font-nunito),"Avenir Next Rounded","Arial Rounded MT Bold",sans-serif; font-weight: 800; cursor: pointer; box-shadow: 0 8px 13px rgba(92,65,32,.12); transition: transform 150ms ease,box-shadow 150ms ease; }
 .letterTray button:after { content: ""; position: absolute; right: 0; bottom: 0; left: 0; height: 22%; background: var(--letter-accent); opacity: .85; }
 .letterTray button:hover { transform: translateY(-5px) rotate(-2deg); box-shadow: 0 13px 19px rgba(92,65,32,.2); }
 .letterTray button:active { transform: translateY(0) scale(.94); }
@@ -115,7 +115,7 @@
 .successMessage b { color: #ff7a00; font-size: 1rem; animation: sparkleSpin 1.4s ease-in-out infinite; }
 .libraryView, .gamesView { max-width: 1240px; margin: 0 auto; padding: 5rem 2rem 8rem; }
 .viewIntro { display: grid; grid-template-columns: 1.1fr .9fr; gap: 4rem; align-items: end; }
-.viewIntro h1 { margin-top: 1rem; font-family: Georgia,serif; font-size: clamp(4rem,8vw,7.5rem); font-weight: 400; line-height: .87; letter-spacing: -.065em; }
+.viewIntro h1 { margin-top: 1rem; font-family: var(--font-nunito),"Avenir Next Rounded","Arial Rounded MT Bold",sans-serif; font-size: clamp(4rem,8vw,7.5rem); font-weight: 700; line-height: .87; letter-spacing: -.065em; }
 .viewIntro > p { max-width: 520px; padding-bottom: .5rem; color: var(--muted); font-size: 1.05rem; line-height: 1.8; }
 .libraryTools { display: grid; grid-template-columns: 1fr 200px auto; gap: .8rem; align-items: center; margin-top: 3rem; border-block: 1px solid rgba(41,38,34,.1); padding: 1.2rem 0; }
 .libraryTools input, .libraryTools select { min-height: 48px; border: 1px solid rgba(41,38,34,.12); border-radius: 999px; outline: 0; background: white; padding: 0 1rem; }
@@ -126,7 +126,7 @@
 .tableHead { border-bottom: 1px solid rgba(41,38,34,.1); padding: .8rem 1rem; color: var(--muted); font-size: .65rem; font-weight: 900; letter-spacing: .13em; text-transform: uppercase; }
 .wordRow { width: 100%; border: 0; border-bottom: 1px solid rgba(41,38,34,.08); background: transparent; padding: 1.2rem 1rem; text-align: left; cursor: pointer; }
 .wordRow:hover { border-radius: 1rem; background: white; box-shadow: 0 12px 35px rgba(66,49,26,.07); }
-.wordRow strong { font-family: Georgia,serif; font-size: 1.4rem; font-weight: 400; }
+.wordRow strong { font-family: var(--font-nunito),"Avenir Next Rounded","Arial Rounded MT Bold",sans-serif; font-size: 1.4rem; font-weight: 700; }
 .wordRow > span { overflow: hidden; color: var(--muted); font-size: .84rem; text-overflow: ellipsis; white-space: nowrap; }
 .wordRow small { color: var(--muted); font-size: .72rem; }
 .wordRow .doneStatus { color: #247a59; font-weight: 850; }
@@ -134,17 +134,17 @@
 .gamePanel { display: grid; grid-template-columns: .72fr 1.28fr; gap: 2rem; margin-top: 4rem; border-radius: 2rem; background: #292622; padding: clamp(1.5rem,4vw,3.5rem); color: white; }
 .gameCopy { display: flex; flex-direction: column; align-items: flex-start; padding: 1rem; }
 .livePill { border-radius: 999px; background: rgba(255,122,0,.18); padding: .55rem .75rem; color: #ffad60; font-size: .64rem; font-weight: 900; letter-spacing: .14em; }
-.gameCopy h2 { margin-top: 1.5rem; font-family: Georgia,serif; font-size: clamp(3.2rem,6vw,5.6rem); font-weight: 400; line-height: .9; letter-spacing: -.055em; }
+.gameCopy h2 { margin-top: 1.5rem; font-family: var(--font-nunito),"Avenir Next Rounded","Arial Rounded MT Bold",sans-serif; font-size: clamp(3.2rem,6vw,5.6rem); font-weight: 700; line-height: .9; letter-spacing: -.055em; }
 .gameCopy > p { margin-top: 1.4rem; color: rgba(255,255,255,.58); line-height: 1.75; }
 .gameCopy > button { margin-top: 2rem; border: 0; border-radius: 999px; background: #ff7a00; padding: .9rem 1.2rem; color: white; font-weight: 850; cursor: pointer; }
 .gameStats { display: flex; gap: 1.5rem; margin-top: auto; border-top: 1px solid rgba(255,255,255,.1); padding-top: 1.5rem; color: rgba(255,255,255,.48); font-size: .72rem; }
-.gameStats b { display: block; color: white; font-family: Georgia,serif; font-size: 1.8rem; font-weight: 400; }
+.gameStats b { display: block; color: white; font-family: var(--font-nunito),"Avenir Next Rounded","Arial Rounded MT Bold",sans-serif; font-size: 1.8rem; font-weight: 700; }
 .bingoBoard { display: grid; grid-template-columns: repeat(3,1fr); gap: .7rem; border-radius: 1.5rem; background: #fff9f0; padding: 1rem; }
 .bingoBoard button { position: relative; overflow: hidden; min-height: 150px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid rgba(41,38,34,.09); border-radius: 1rem; background: #fffdf9; color: var(--ink); cursor: pointer; transition: transform 170ms ease,border-color 170ms ease,box-shadow 170ms ease; }
 .bingoBoard button:before { content: ""; position: absolute; top: 0; right: 0; left: 0; height: .28rem; background: var(--tile-color); opacity: .72; }
 .bingoBoard button:hover { border-color: var(--tile-color); transform: translateY(-4px) rotate(-.6deg); box-shadow: 0 12px 24px rgba(0,0,0,.08); }
 .bingoBoard small { position: absolute; top: .7rem; left: .7rem; color: var(--muted); font-size: .58rem; }
-.bingoBoard strong { font-family: Georgia,serif; font-size: clamp(1.4rem,3vw,2.2rem); font-weight: 400; }
+.bingoBoard strong { font-family: var(--font-nunito),"Avenir Next Rounded","Arial Rounded MT Bold",sans-serif; font-size: clamp(1.4rem,3vw,2.2rem); font-weight: 700; }
 .bingoBoard button > span { position: absolute; right: .7rem; bottom: .6rem; color: #ff7a00; font-weight: 900; }
 .bingoBoard .markedTile { border-color: var(--tile-color); background: color-mix(in srgb,var(--tile-color),white 87%); box-shadow: inset 0 0 0 2px var(--tile-color); animation: tilePop 330ms cubic-bezier(.2,.9,.25,1.25) both; }
 .hasBingo { box-shadow: 0 0 0 4px #ff7a00,0 22px 60px rgba(255,122,0,.28); animation: bingoWin 1.8s ease-in-out infinite; }
