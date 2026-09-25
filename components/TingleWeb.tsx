@@ -137,6 +137,11 @@ export default function TingleWeb({ words }: { words: TingleWord[] }) {
       .slice(0, 80);
   }, [pack, query, words]);
 
+  const illustratedWords = useMemo(
+    () => words.filter((word) => word.imageStatus === "approved" && word.thumbnailPath),
+    [words],
+  );
+
   const recallOptions = useMemo(() => {
     const currentIndex = Math.max(0, words.findIndex((word) => word.wordId === selected.wordId));
     const optionIndexes = [currentIndex, (currentIndex + 41) % words.length, (currentIndex + 97) % words.length, (currentIndex + 173) % words.length];
@@ -171,7 +176,7 @@ export default function TingleWeb({ words }: { words: TingleWord[] }) {
         <nav className={styles.nav} aria-label="Tingle Web sections">
           {(["learn", "library", "games"] as View[]).map((item) => (
             <button key={item} type="button" className={view === item ? styles.activeNav : ""} onClick={() => setView(item)}>
-              {item === "learn" ? "Learn" : item === "library" ? "Word library" : "Recall games"}
+              {item === "learn" ? "Learn" : item === "library" ? "Cards collection" : "Recall games"}
             </button>
           ))}
         </nav>
@@ -351,8 +356,30 @@ export default function TingleWeb({ words }: { words: TingleWord[] }) {
       {view === "library" && (
         <section className={styles.libraryView}>
           <div className={styles.viewIntro}>
-            <div><p className={styles.kicker}>2,000-WORD FOUNDATION</p><h1>Find your next word.</h1></div>
-            <p>Search by word or meaning. Every word is organized into one of 20 production packs, ready for sketch, audio, cue, and recall content.</p>
+            <div><p className={styles.kicker}>CARDS COLLECTION</p><h1>See it. Recall it.</h1></div>
+            <p>Open an illustrated card to hear the word, choose a personal color cue, build it with wooden letters, and practice recall.</p>
+          </div>
+          <div className={styles.collectionHeader}>
+            <div><span>Illustrated cards ready</span><strong>{illustratedWords.length}</strong></div>
+            <p>Each sketch is matched to its exact word ID and learning pack.</p>
+          </div>
+          <div className={styles.cardCollection}>
+            {illustratedWords.map((word) => (
+              <button type="button" className={styles.collectionCard} key={word.wordId} onClick={() => selectWord(word)}>
+                <div className={styles.collectionArtwork}>
+                  <Image
+                    src={word.thumbnailPath!}
+                    alt={word.imageAlt ?? `Tingle memory sketch for ${word.headword}`}
+                    width={480}
+                    height={360}
+                    sizes="(max-width: 680px) 44vw, (max-width: 1050px) 29vw, 210px"
+                  />
+                  <span>Pack {String(word.pack).padStart(2, "0")}</span>
+                </div>
+                <div><strong>{word.headword}</strong><small>{word.wordId}</small></div>
+                <i aria-hidden="true">→</i>
+              </button>
+            ))}
           </div>
           <div className={styles.libraryTools}>
             <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search words or meanings" aria-label="Search the word library" />
