@@ -223,6 +223,11 @@ export default function TingleWeb({ words }: { words: TingleWord[] }) {
             </div>
 
             <article className={`${styles.memoryCard} ${selected.imagePath ? styles.hasArtwork : ""}`}>
+              <div className={styles.memorySparks} aria-hidden="true">
+                {cues.map((spark, index) => (
+                  <i key={spark.name} style={{ "--spark": spark.color, "--spark-index": index } as React.CSSProperties} />
+                ))}
+              </div>
               <span className={styles.cueBadge}>{cue.name} cue</span>
               {!cardFlipped ? (
                 <div className={styles.flashcardPanel} key={`front-${selected.wordId}`} aria-live="polite">
@@ -288,17 +293,28 @@ export default function TingleWeb({ words }: { words: TingleWord[] }) {
                 <p className={styles.kicker}>BUILD THE WORD</p>
                 <h3>Put the letters in order.</h3>
                 <div className={`${styles.buildRail} ${wordComplete ? styles.completeRail : ""}`}>
-                  {selected.normalized.split("").map((_, index) => <span key={index}>{builtWord[index] ?? ""}</span>)}
+                  {selected.normalized.split("").map((_, index) => (
+                    <span key={index} className={builtWord[index] ? styles.filledSlot : ""}>{builtWord[index] ?? ""}</span>
+                  ))}
                 </div>
                 <div className={styles.letterTray}>
                   {letters.map((token) => (
-                    <button type="button" key={token.id} disabled={builtIds.includes(token.id)} onClick={() => setBuiltIds([...builtIds, token.id])}>
+                    <button
+                      type="button"
+                      key={token.id}
+                      disabled={builtIds.includes(token.id)}
+                      onClick={() => setBuiltIds([...builtIds, token.id])}
+                      style={{ "--letter-accent": cues[token.id % cues.length].color } as React.CSSProperties}
+                    >
                       {token.letter}
                     </button>
                   ))}
                 </div>
                 <div className={styles.practiceFooter}>
-                  <span>{wordComplete ? "That’s it — the word is complete." : "Tap each wooden letter."}</span>
+                  <span className={wordComplete ? styles.successMessage : ""}>
+                    {wordComplete && <b aria-hidden="true">✦</b>}
+                    {wordComplete ? "That’s it — the word is complete." : "Tap each wooden letter."}
+                  </span>
                   <button type="button" onClick={() => setBuiltIds([])}>Reset</button>
                 </div>
               </article>
@@ -320,7 +336,10 @@ export default function TingleWeb({ words }: { words: TingleWord[] }) {
                   ))}
                 </div>
                 <div className={styles.practiceFooter}>
-                  <span>{answer ? (answer === selected.wordId ? "Correct — retrieve it again later." : `Not yet. The answer is “${selected.headword}”.`) : "Choose one answer."}</span>
+                  <span className={answer === selected.wordId ? styles.successMessage : ""}>
+                    {answer === selected.wordId && <b aria-hidden="true">✦</b>}
+                    {answer ? (answer === selected.wordId ? "Correct — retrieve it again later." : `Not yet. The answer is “${selected.headword}”.`) : "Choose one answer."}
+                  </span>
                   <button type="button" onClick={() => setAnswer(null)}>Again</button>
                 </div>
               </article>
@@ -378,6 +397,7 @@ export default function TingleWeb({ words }: { words: TingleWord[] }) {
                   type="button"
                   key={word.wordId}
                   className={bingoMarks.includes(index) ? styles.markedTile : ""}
+                  style={{ "--tile-color": cues[index % cues.length].color } as React.CSSProperties}
                   onClick={() => setBingoMarks(bingoMarks.includes(index) ? bingoMarks.filter((item) => item !== index) : [...bingoMarks, index])}
                 >
                   <small>{word.wordId.replace("TNG-", "")}</small>
