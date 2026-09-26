@@ -19,6 +19,14 @@ export interface TingleWord {
   imageStatus: string;
 }
 
+export interface ArchiveCard {
+  archiveId: string;
+  label: string;
+  sourceName: string;
+  imagePath: string;
+  wordId: string | null;
+}
+
 type Cue = { name: string; color: string; soft: string };
 type Progress = Record<string, { cue: string; remembered: boolean }>;
 type View = "learn" | "library" | "games";
@@ -45,11 +53,13 @@ function letterTokens(word: TingleWord) {
   return [...tokens.slice(1), tokens[0]].reverse();
 }
 
-export default function TingleWeb({ words }: { words: TingleWord[] }) {
+export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]; archiveCards: ArchiveCard[] }) {
   const initialWord = words.find((word) => word.headword === "sun") ?? words[0];
   const [view, setView] = useState<View>("learn");
   const [selectedId, setSelectedId] = useState(initialWord.wordId);
   const [query, setQuery] = useState("");
+  const [archiveQuery, setArchiveQuery] = useState("");
+  const [archiveLimit, setArchiveLimit] = useState(48);
   const [pack, setPack] = useState<number | "all">("all");
   const [progress, setProgress] = useState<Progress>({});
   const [cardFlipped, setCardFlipped] = useState(false);
@@ -141,6 +151,19 @@ export default function TingleWeb({ words }: { words: TingleWord[] }) {
     () => words.filter((word) => word.imageStatus === "approved" && word.thumbnailPath),
     [words],
   );
+
+  const wordsById = useMemo(
+    () => new Map(words.map((word) => [word.wordId, word])),
+    [words],
+  );
+
+  const filteredArchiveCards = useMemo(() => {
+    const normalizedQuery = archiveQuery.trim().toLowerCase();
+    if (!normalizedQuery) return archiveCards;
+    return archiveCards.filter((card) => card.label.toLowerCase().includes(normalizedQuery));
+  }, [archiveCards, archiveQuery]);
+
+  const visibleArchiveCards = filteredArchiveCards.slice(0, archiveLimit);
 
   const recallOptions = useMemo(() => {
     const currentIndex = Math.max(0, words.findIndex((word) => word.wordId === selected.wordId));
@@ -380,6 +403,54 @@ export default function TingleWeb({ words }: { words: TingleWord[] }) {
                 <i aria-hidden="true">→</i>
               </button>
             ))}
+          </div>
+          <section className={styles.archiveSection}>
+            <div className={styles.archiveIntro}>
+              <div>
+                <p className={styles.kicker}>FROM THE ORIGINAL COCOLINGO LIBRARY</p>
+                <h2>Illustration archive.</h2>
+                <p>Colorful visual references from the original collection—preserved alongside Tingle&apos;s new sketch-memory cards.</p>
+              </div>
+              <div className={styles.archiveCount}><strong>{archiveCards.length}</strong><span>archive visuals</span></div>
+            </div>
+            <div className={styles.archiveTools}>
+              <input
+                value={archiveQuery}
+                onChange={(event) => { setArchiveQuery(event.target.value); setArchiveLimit(48); }}
+                placeholder="Search the illustration archive"
+                aria-label="Search the illustration archive"
+              />
+              <span>{filteredArchiveCards.length} visuals</span>
+            </div>
+            <div className={styles.archiveGrid}>
+              {visibleArchiveCards.map((card) => {
+                const linkedWord = card.wordId ? wordsById.get(card.wordId) : undefined;
+                return (
+                  <article className={styles.archiveCard} key={card.archiveId}>
+                    <div className={styles.archiveArtwork}>
+                      <Image src={card.imagePath} alt={`Cocolingo illustration for ${card.label}`} width={480} height={480} sizes="(max-width: 680px) 44vw, (max-width: 1050px) 22vw, 180px" />
+                    </div>
+                    <div className={styles.archiveMeta}>
+                      <strong>{card.label}</strong>
+                      {linkedWord ? (
+                        <button type="button" onClick={() => selectWord(linkedWord)}>Open learning card →</button>
+                      ) : (
+                        <span>Archive visual</span>
+                      )}
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+            {archiveLimit < filteredArchiveCards.length && (
+              <button type="button" className={styles.showMoreArchive} onClick={() => setArchiveLimit(archiveLimit + 48)}>
+                Show more illustrations
+              </button>
+            )}
+          </section>
+          <div className={styles.catalogueHeading}>
+            <p className={styles.kicker}>2,000-WORD FOUNDATION</p>
+            <h2>Search the complete word catalogue.</h2>
           </div>
           <div className={styles.libraryTools}>
             <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search words or meanings" aria-label="Search the word library" />

@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
+import archiveManifest from "../../content/cocolingo-archive-v1.json";
 import catalogue from "../../content/words-v1.json";
 import imageManifest from "../../public/word-images/v1/manifest.json";
-import TingleWeb, { type TingleWord } from "../../components/TingleWeb";
+import TingleWeb, { type ArchiveCard, type TingleWord } from "../../components/TingleWeb";
 
 export const metadata: Metadata = {
   title: "Tingle Web — Build, choose, remember",
@@ -44,5 +45,7 @@ export default function LearnPage() {
     };
   });
 
-  return <TingleWeb words={words} />;
+  const archiveCards: ArchiveCard[] = archiveManifest.records;
+
+  return <TingleWeb words={words} archiveCards={archiveCards} />;
 }
