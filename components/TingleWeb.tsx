@@ -43,6 +43,7 @@ const cues: Cue[] = [
 ];
 
 const STORAGE_KEY = "tingle-web-progress-v1";
+const COMPANION_NAME_KEY = "tingle-companion-name-v1";
 
 function getCue(name: string | undefined) {
   return cues.find((cue) => cue.name === name) ?? cues[0];
@@ -83,6 +84,7 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
   const [openPairCards, setOpenPairCards] = useState<string[]>([]);
   const [matchedPairIds, setMatchedPairIds] = useState<string[]>([]);
   const [pairAttempts, setPairAttempts] = useState(0);
+  const [companionName, setCompanionName] = useState("My Tingle");
 
   const selected = words.find((word) => word.wordId === selectedId) ?? initialWord;
   const selectedProgress = progress[selected.wordId];
@@ -95,6 +97,8 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
     try {
       const saved = window.localStorage.getItem(STORAGE_KEY);
       if (saved) setProgress(JSON.parse(saved) as Progress);
+      const savedCompanionName = window.localStorage.getItem(COMPANION_NAME_KEY);
+      if (savedCompanionName) setCompanionName(savedCompanionName);
     } catch {
       // The experience still works when storage is unavailable.
     }
@@ -112,6 +116,16 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
     } catch {
       // Keep the current session usable without persistence.
+    }
+  }
+
+  function renameCompanion(name: string) {
+    const nextName = name.slice(0, 24);
+    setCompanionName(nextName);
+    try {
+      window.localStorage.setItem(COMPANION_NAME_KEY, nextName);
+    } catch {
+      // Keep naming available for the current session without persistence.
     }
   }
 
@@ -263,7 +277,10 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
           ))}
         </nav>
         <div className={styles.headerActions}>
-          <span><b>{rememberedCount}</b> remembered</span>
+          <div className={styles.companionMini}>
+            <Image src="/tingle-user-character-v1.png" alt="Your Tingle memory companion" width={1240} height={1240} />
+            <span><b>{companionName || "My Tingle"}</b>{rememberedCount} remembered</span>
+          </div>
           <Link href="/">About Tingle ↗</Link>
         </div>
       </header>
@@ -310,11 +327,6 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
             </div>
 
             <article className={`${styles.memoryCard} ${selected.imagePath ? styles.hasArtwork : ""}`}>
-              <div className={styles.memorySparks} aria-hidden="true">
-                {cues.map((spark, index) => (
-                  <i key={spark.name} style={{ "--spark": spark.color, "--spark-index": index } as React.CSSProperties} />
-                ))}
-              </div>
               <span className={styles.cueBadge}>{cue.name} cue</span>
               {!cardFlipped ? (
                 <div className={styles.flashcardPanel} key={`front-${selected.wordId}`} aria-live="polite">
@@ -447,7 +459,13 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
           </div>
           <div className={styles.cardCollection}>
             {illustratedWords.map((word) => (
-              <button type="button" className={styles.collectionCard} key={word.wordId} onClick={() => selectWord(word)}>
+              <button
+                type="button"
+                className={styles.collectionCard}
+                key={word.wordId}
+                style={{ "--card-cue": getCue(progress[word.wordId]?.cue).color } as React.CSSProperties}
+                onClick={() => selectWord(word)}
+              >
                 <div className={styles.collectionArtwork}>
                   <Image
                     src={word.thumbnailPath!}
@@ -485,7 +503,11 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
               {visibleArchiveCards.map((card) => {
                 const linkedWord = card.wordId ? wordsById.get(card.wordId) : undefined;
                 return (
-                  <article className={styles.archiveCard} key={card.archiveId}>
+                  <article
+                    className={styles.archiveCard}
+                    key={card.archiveId}
+                    style={{ "--card-cue": getCue(linkedWord ? progress[linkedWord.wordId]?.cue : undefined).color } as React.CSSProperties}
+                  >
                     <div className={styles.archiveArtwork}>
                       <Image src={card.imagePath} alt={`Tingle illustration for ${card.label}`} width={480} height={480} sizes="(max-width: 680px) 44vw, (max-width: 1050px) 22vw, 180px" />
                     </div>
@@ -540,6 +562,24 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
             <div><p className={styles.kicker}>TINGLE RECALL GAMES</p><h1>Play to remember.</h1></div>
             <p>Practice retrieval through short, tactile card games. Pair each sketch with its word, then strengthen recall with Word Bingo.</p>
           </div>
+          <section className={styles.companionPanel} aria-label="Your Tingle companion">
+            <div className={styles.companionPortrait}>
+              <Image src="/tingle-user-character-v1.png" alt="Friendly wooden Tingle memory companion" width={1240} height={1240} priority />
+              <i style={{ backgroundColor: cue.color }} aria-hidden="true" />
+            </div>
+            <div className={styles.companionCopy}>
+              <p className={styles.kicker}>YOUR MEMORY COMPANION</p>
+              <h2>{companionName || "My Tingle"}</h2>
+              <p>{rememberedCount > 0 ? `We have remembered ${rememberedCount} ${rememberedCount === 1 ? "word" : "words"} together. Keep going.` : "Build confidence one word at a time. Your companion grows with your recall journey."}</p>
+              <label htmlFor="companion-name">Name your character</label>
+              <input id="companion-name" value={companionName} onChange={(event) => renameCompanion(event.target.value)} maxLength={24} placeholder="My Tingle" />
+            </div>
+            <div className={styles.companionProgress}>
+              <span><b>{cueCount}</b> color cues</span>
+              <span><b>{rememberedCount}</b> remembered</span>
+              <small><i style={{ backgroundColor: cue.color }} /> Current cue: {cue.name}</small>
+            </div>
+          </section>
           <div className={styles.pairPanel}>
             <div className={styles.pairHeader}>
               <div>
@@ -564,6 +604,7 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
                     type="button"
                     key={card.key}
                     className={`${styles.pairCard} ${isOpen ? styles.pairCardOpen : ""} ${isMatched ? styles.pairCardMatched : ""}`}
+                    style={{ "--card-cue": getCue(progress[word.wordId]?.cue).color } as React.CSSProperties}
                     onClick={() => choosePairCard(card)}
                     aria-label={isOpen ? `${card.kind === "picture" ? "Picture" : "Word"} card: ${word.headword}` : "Hidden pairing card"}
                     aria-pressed={isOpen}
