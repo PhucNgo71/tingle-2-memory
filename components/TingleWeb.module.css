@@ -17,7 +17,6 @@
 .nav button { position: relative; border: 0; border-radius: 999px; background: transparent; padding: .72rem 1rem; color: var(--muted); font-size: .84rem; font-weight: 800; cursor: pointer; transition: background 180ms ease,color 180ms ease,transform 180ms ease; }
 .nav button:hover, .nav .activeNav { background: #f4ebdf; color: var(--ink); }
 .nav button:hover { transform: translateY(-1px); }
-.nav .activeNav:after { content: ""; position: absolute; width: .34rem; height: .34rem; right: .35rem; bottom: .25rem; border-radius: 50%; background: #ff7a00; animation: navDot 2.2s ease-in-out infinite; }
 .headerActions { display: flex; align-items: center; gap: 1rem; font-size: .76rem; font-weight: 750; color: var(--muted); }
 .headerActions > span { border-right: 1px solid rgba(41,38,34,.12); padding-right: 1rem; }
 .headerActions b { color: #ff7a00; }
@@ -287,7 +286,6 @@
 .bingoBoard .markedTile .dotMarker { background: var(--tile-color); transform: scale(1.15); }
 .dotGameComplete { box-shadow: 0 0 0 4px #ff7a00,0 22px 60px rgba(255,122,0,.28); animation: bingoWin 1.8s ease-in-out infinite; }
 
-@keyframes navDot { 0%,100% { transform: scale(.75); opacity: .55; } 50% { transform: scale(1.15); opacity: 1; } }
 @keyframes soundGlow { 0%,100% { box-shadow: 0 0 0 0 rgba(255,122,0,.32); } 50% { box-shadow: 0 0 0 .45rem rgba(255,122,0,0); } }
 @keyframes cueBreathe { 0%,100% { transform: scale(1); } 50% { transform: scale(1.035); } }
 @keyframes companionCueGlow { 0%,100% { box-shadow: inset 0 2px 2px rgba(255,255,255,.55),0 2px 4px rgba(41,38,34,.25),0 0 0 0 color-mix(in srgb,var(--companion-cue),transparent 55%); } 50% { box-shadow: inset 0 2px 2px rgba(255,255,255,.55),0 2px 4px rgba(41,38,34,.25),0 0 0 5px transparent; } }
