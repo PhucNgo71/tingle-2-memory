@@ -3,7 +3,7 @@ import path from "node:path";
 import process from "node:process";
 
 const projectDir = process.cwd();
-const manifestPath = path.join(projectDir, "content", "cocolingo-archive-v1.json");
+const manifestPath = path.join(projectDir, "content", "tingle-illustration-library-v1.json");
 const cataloguePath = path.join(projectDir, "content", "words-v1.json");
 const manifest = JSON.parse(await fs.readFile(manifestPath, "utf8"));
 const catalogue = JSON.parse(await fs.readFile(cataloguePath, "utf8"));

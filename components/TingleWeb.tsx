@@ -30,6 +30,7 @@ export interface ArchiveCard {
 type Cue = { name: string; color: string; soft: string };
 type Progress = Record<string, { cue: string; remembered: boolean }>;
 type View = "learn" | "library" | "games";
+type PairCard = { key: string; wordId: string; kind: "picture" | "word" };
 
 const cues: Cue[] = [
   { name: "Orange", color: "#ff7a00", soft: "#fff0df" },
@@ -53,6 +54,17 @@ function letterTokens(word: TingleWord) {
   return [...tokens.slice(1), tokens[0]].reverse();
 }
 
+function shuffleWithSeed<T>(items: T[], seed: number) {
+  const shuffled = [...items];
+  let state = seed + 17;
+  for (let index = shuffled.length - 1; index > 0; index -= 1) {
+    state = (state * 9301 + 49297) % 233280;
+    const target = Math.floor((state / 233280) * (index + 1));
+    [shuffled[index], shuffled[target]] = [shuffled[target], shuffled[index]];
+  }
+  return shuffled;
+}
+
 export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]; archiveCards: ArchiveCard[] }) {
   const initialWord = words.find((word) => word.headword === "sun") ?? words[0];
   const [view, setView] = useState<View>("learn");
@@ -67,6 +79,10 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
   const [answer, setAnswer] = useState<string | null>(null);
   const [bingoSeed, setBingoSeed] = useState(0);
   const [bingoMarks, setBingoMarks] = useState<number[]>([]);
+  const [pairSeed, setPairSeed] = useState(0);
+  const [openPairCards, setOpenPairCards] = useState<string[]>([]);
+  const [matchedPairIds, setMatchedPairIds] = useState<string[]>([]);
+  const [pairAttempts, setPairAttempts] = useState(0);
 
   const selected = words.find((word) => word.wordId === selectedId) ?? initialWord;
   const selectedProgress = progress[selected.wordId];
@@ -164,6 +180,49 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
   }, [archiveCards, archiveQuery]);
 
   const visibleArchiveCards = filteredArchiveCards.slice(0, archiveLimit);
+
+  const pairWords = useMemo(() => {
+    if (!illustratedWords.length) return [];
+    const start = (pairSeed * 3) % illustratedWords.length;
+    return Array.from({ length: Math.min(4, illustratedWords.length) }, (_, index) => illustratedWords[(start + index) % illustratedWords.length]);
+  }, [illustratedWords, pairSeed]);
+
+  const pairCards = useMemo<PairCard[]>(() => {
+    const cards = pairWords.flatMap((word) => [
+      { key: `picture-${word.wordId}`, wordId: word.wordId, kind: "picture" as const },
+      { key: `word-${word.wordId}`, wordId: word.wordId, kind: "word" as const },
+    ]);
+    return shuffleWithSeed(cards, pairSeed + 101);
+  }, [pairSeed, pairWords]);
+
+  const pairComplete = pairWords.length > 0 && matchedPairIds.length === pairWords.length;
+
+  useEffect(() => {
+    if (openPairCards.length !== 2) return;
+    const [first, second] = openPairCards.map((key) => pairCards.find((card) => card.key === key));
+    const isMatch = Boolean(first && second && first.wordId === second.wordId && first.kind !== second.kind);
+    const timer = window.setTimeout(() => {
+      if (isMatch && first) {
+        setMatchedPairIds((current) => current.includes(first.wordId) ? current : [...current, first.wordId]);
+      }
+      setOpenPairCards([]);
+    }, isMatch ? 420 : 850);
+    return () => window.clearTimeout(timer);
+  }, [openPairCards, pairCards]);
+
+  function choosePairCard(card: PairCard) {
+    if (openPairCards.length >= 2 || openPairCards.includes(card.key) || matchedPairIds.includes(card.wordId)) return;
+    const next = [...openPairCards, card.key];
+    setOpenPairCards(next);
+    if (next.length === 2) setPairAttempts((current) => current + 1);
+  }
+
+  function newPairRound() {
+    setPairSeed((current) => current + 1);
+    setOpenPairCards([]);
+    setMatchedPairIds([]);
+    setPairAttempts(0);
+  }
 
   const recallOptions = useMemo(() => {
     const currentIndex = Math.max(0, words.findIndex((word) => word.wordId === selected.wordId));
@@ -407,9 +466,9 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
           <section className={styles.archiveSection}>
             <div className={styles.archiveIntro}>
               <div>
-                <p className={styles.kicker}>FROM THE ORIGINAL COCOLINGO LIBRARY</p>
-                <h2>Illustration archive.</h2>
-                <p>Colorful visual references from the original collection—preserved alongside Tingle&apos;s new sketch-memory cards.</p>
+                <p className={styles.kicker}>THE TINGLE VISUAL LIBRARY</p>
+                <h2>Illustration collection.</h2>
+                <p>Visual references from the Tingle collection—organized alongside our sketch-memory cards.</p>
               </div>
               <div className={styles.archiveCount}><strong>{archiveCards.length}</strong><span>archive visuals</span></div>
             </div>
@@ -428,7 +487,7 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
                 return (
                   <article className={styles.archiveCard} key={card.archiveId}>
                     <div className={styles.archiveArtwork}>
-                      <Image src={card.imagePath} alt={`Cocolingo illustration for ${card.label}`} width={480} height={480} sizes="(max-width: 680px) 44vw, (max-width: 1050px) 22vw, 180px" />
+                      <Image src={card.imagePath} alt={`Tingle illustration for ${card.label}`} width={480} height={480} sizes="(max-width: 680px) 44vw, (max-width: 1050px) 22vw, 180px" />
                     </div>
                     <div className={styles.archiveMeta}>
                       <strong>{card.label}</strong>
@@ -478,12 +537,54 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
       {view === "games" && (
         <section className={styles.gamesView}>
           <div className={styles.viewIntro}>
-            <div><p className={styles.kicker}>RECALL GAME 01</p><h1>Word Bingo.</h1></div>
-            <p>Tap the words you hear or recognize. Complete a row, column, or diagonal. Bingo is the first playable format in Tingle&apos;s planned recall game collection.</p>
+            <div><p className={styles.kicker}>TINGLE RECALL GAMES</p><h1>Play to remember.</h1></div>
+            <p>Practice retrieval through short, tactile card games. Pair each sketch with its word, then strengthen recall with Word Bingo.</p>
+          </div>
+          <div className={styles.pairPanel}>
+            <div className={styles.pairHeader}>
+              <div>
+                <p className={styles.kicker}>RECALL GAME 01 · CHOOSE THE PAIR</p>
+                <h2>{pairComplete ? "All pairs found!" : "Match picture + word."}</h2>
+                <p>{pairComplete ? `You completed the round in ${pairAttempts} ${pairAttempts === 1 ? "try" : "tries"}.` : "Turn over two cards. Find the word that belongs to each Tingle sketch."}</p>
+              </div>
+              <div className={styles.pairScore}>
+                <span><b>{matchedPairIds.length}</b> / {pairWords.length} pairs</span>
+                <span><b>{pairAttempts}</b> tries</span>
+                <button type="button" onClick={newPairRound}>{pairComplete ? "Play again" : "New cards"} ↗</button>
+              </div>
+            </div>
+            <div className={`${styles.pairBoard} ${pairComplete ? styles.pairBoardComplete : ""}`} aria-live="polite">
+              {pairCards.map((card) => {
+                const word = wordsById.get(card.wordId);
+                if (!word) return null;
+                const isOpen = openPairCards.includes(card.key) || matchedPairIds.includes(card.wordId);
+                const isMatched = matchedPairIds.includes(card.wordId);
+                return (
+                  <button
+                    type="button"
+                    key={card.key}
+                    className={`${styles.pairCard} ${isOpen ? styles.pairCardOpen : ""} ${isMatched ? styles.pairCardMatched : ""}`}
+                    onClick={() => choosePairCard(card)}
+                    aria-label={isOpen ? `${card.kind === "picture" ? "Picture" : "Word"} card: ${word.headword}` : "Hidden pairing card"}
+                    aria-pressed={isOpen}
+                  >
+                    <span className={styles.pairCardBack}><i aria-hidden="true">✦</i><small>TINGLE</small></span>
+                    <span className={styles.pairCardFront}>
+                      {card.kind === "picture" && word.thumbnailPath ? (
+                        <Image src={word.thumbnailPath} alt={word.imageAlt ?? `Tingle memory sketch for ${word.headword}`} width={480} height={360} sizes="(max-width: 680px) 42vw, 220px" />
+                      ) : (
+                        <strong>{word.headword}</strong>
+                      )}
+                      <small>{card.kind === "picture" ? "PICTURE" : "WORD"}</small>
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
           <div className={styles.gamePanel}>
             <div className={styles.gameCopy}>
-              <span className={styles.livePill}>PLAYABLE MVP</span>
+              <span className={styles.livePill}>RECALL GAME 02 · WORD BINGO</span>
               <h2>{bingo ? "Bingo!" : "Make one line."}</h2>
               <p>{bingo ? "You completed a recall line. Start a fresh board when you’re ready." : "Choose a word, say it aloud, then tap the tile. Use your memory—not speed."}</p>
               <button type="button" onClick={() => { setBingoSeed(bingoSeed + 1); setBingoMarks([]); }}>New board ↗</button>

@@ -1,4 +1,4 @@
-"""Build the web-ready Cocolingo illustration archive from square PNG art."""
+"""Build the web-ready Tingle illustration library from square PNG art."""
 
 from __future__ import annotations
 
@@ -13,7 +13,7 @@ from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]
 CATALOGUE_PATH = ROOT / "content/words-v1.json"
-MANIFEST_PATH = ROOT / "content/cocolingo-archive-v1.json"
+MANIFEST_PATH = ROOT / "content/tingle-illustration-library-v1.json"
 OUTPUT_DIR = ROOT / "public/archive-images/v1/cards"
 PAPER = (255, 250, 242, 255)
 SIZE = (480, 480)
@@ -35,7 +35,7 @@ def display_name(value: str) -> str:
 
 def main(arguments: list[str]) -> None:
     if len(arguments) != 1:
-        raise SystemExit("Usage: python scripts/import-cocolingo-archive.py SOURCE_FOLDER")
+        raise SystemExit("Usage: python scripts/import-tingle-illustration-library.py SOURCE_FOLDER")
 
     source_dir = Path(arguments[0]).expanduser().resolve()
     if not source_dir.is_dir():
@@ -83,7 +83,7 @@ def main(arguments: list[str]) -> None:
 
     manifest = {
         "schemaVersion": 1,
-        "collection": "Cocolingo Illustration Archive",
+        "collection": "Tingle Illustration Library",
         "generatedAt": date.today().isoformat(),
         "count": len(records),
         "catalogueMatchCount": sum(record["wordId"] is not None for record in records),

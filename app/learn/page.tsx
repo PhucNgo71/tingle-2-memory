@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import archiveManifest from "../../content/cocolingo-archive-v1.json";
+import archiveManifest from "../../content/tingle-illustration-library-v1.json";
 import catalogue from "../../content/words-v1.json";
 import imageManifest from "../../public/word-images/v1/manifest.json";
 import TingleWeb, { type ArchiveCard, type TingleWord } from "../../components/TingleWeb";
