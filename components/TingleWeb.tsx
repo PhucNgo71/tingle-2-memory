@@ -73,13 +73,17 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
   const [query, setQuery] = useState("");
   const [archiveQuery, setArchiveQuery] = useState("");
   const [archiveLimit, setArchiveLimit] = useState(48);
+  const [collectionLimit, setCollectionLimit] = useState(60);
   const [pack, setPack] = useState<number | "all">("all");
   const [progress, setProgress] = useState<Progress>({});
   const [cardFlipped, setCardFlipped] = useState(false);
   const [builtIds, setBuiltIds] = useState<number[]>([]);
   const [answer, setAnswer] = useState<string | null>(null);
-  const [bingoSeed, setBingoSeed] = useState(0);
-  const [bingoMarks, setBingoMarks] = useState<number[]>([]);
+  const [dotSeed, setDotSeed] = useState(0);
+  const [dotMarks, setDotMarks] = useState<number[]>([]);
+  const [dotTarget, setDotTarget] = useState(0);
+  const [dotAttempts, setDotAttempts] = useState(0);
+  const [dotFeedback, setDotFeedback] = useState<"correct" | "incorrect" | null>(null);
   const [pairSeed, setPairSeed] = useState(0);
   const [openPairCards, setOpenPairCards] = useState<string[]>([]);
   const [matchedPairIds, setMatchedPairIds] = useState<string[]>([]);
@@ -89,6 +93,18 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
   const selected = words.find((word) => word.wordId === selectedId) ?? initialWord;
   const selectedProgress = progress[selected.wordId];
   const cue = getCue(selectedProgress?.cue);
+  const preferredCue = useMemo(() => {
+    const totals = new Map<string, number>();
+    Object.values(progress).forEach((item) => {
+      totals.set(item.cue, (totals.get(item.cue) ?? 0) + 1);
+    });
+
+    return cues.reduce(
+      (favorite, candidate) =>
+        (totals.get(candidate.name) ?? 0) > (totals.get(favorite.name) ?? 0) ? candidate : favorite,
+      cue,
+    );
+  }, [cue, progress]);
   const letters = useMemo(() => letterTokens(selected), [selected]);
   const builtWord = builtIds.map((id) => letters.find((token) => token.id === id)?.letter ?? "").join("");
   const wordComplete = builtWord === selected.normalized;
@@ -164,7 +180,7 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  const filteredWords = useMemo(() => {
+  const matchingWords = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
     return words
       .filter((word) => pack === "all" || word.pack === pack)
@@ -173,9 +189,11 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
           !normalizedQuery ||
           word.headword.includes(normalizedQuery) ||
           word.definition.toLowerCase().includes(normalizedQuery),
-      )
-      .slice(0, 80);
+      );
   }, [pack, query, words]);
+
+  const filteredWords = matchingWords.slice(0, 80);
+  const visibleCollectionWords = matchingWords.slice(0, collectionLimit);
 
   const illustratedWords = useMemo(
     () => words.filter((word) => word.imageStatus === "approved" && word.thumbnailPath),
@@ -246,19 +264,37 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
       .sort((a, b) => a.wordId.localeCompare(b.wordId));
   }, [selected, words]);
 
-  const bingoWords = useMemo(() => {
-    const start = (bingoSeed * 9 * 17) % Math.max(1, words.length - 9);
+  const dotWords = useMemo(() => {
+    const start = (dotSeed * 9 * 17) % Math.max(1, words.length - 9);
     return words.slice(start, start + 9);
-  }, [bingoSeed, words]);
+  }, [dotSeed, words]);
 
-  const bingo = useMemo(() => {
-    const lines = [
-      [0, 1, 2], [3, 4, 5], [6, 7, 8],
-      [0, 3, 6], [1, 4, 7], [2, 5, 8],
-      [0, 4, 8], [2, 4, 6],
-    ];
-    return lines.some((line) => line.every((index) => bingoMarks.includes(index)));
-  }, [bingoMarks]);
+  const dotComplete = dotWords.length > 0 && dotMarks.length === dotWords.length;
+  const dotTargetWord = dotWords[dotTarget] ?? dotWords[0];
+
+  function chooseDotWord(index: number) {
+    if (dotComplete || dotMarks.includes(index)) return;
+    setDotAttempts((current) => current + 1);
+    if (index !== dotTarget) {
+      setDotFeedback("incorrect");
+      return;
+    }
+
+    const nextMarks = [...dotMarks, index];
+    setDotMarks(nextMarks);
+    setDotFeedback("correct");
+    const nextTarget = dotWords.findIndex((_, wordIndex) => !nextMarks.includes(wordIndex));
+    if (nextTarget >= 0) setDotTarget(nextTarget);
+  }
+
+  function newDotBoard() {
+    const nextSeed = dotSeed + 1;
+    setDotSeed(nextSeed);
+    setDotMarks([]);
+    setDotTarget(nextSeed % 9);
+    setDotAttempts(0);
+    setDotFeedback(null);
+  }
 
   const rememberedCount = Object.values(progress).filter((item) => item.remembered).length;
   const cueCount = Object.keys(progress).length;
@@ -278,7 +314,13 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
         </nav>
         <div className={styles.headerActions}>
           <div className={styles.companionMini}>
-            <Image src="/tingle-user-character-v1.png" alt="Your Tingle memory companion" width={1240} height={1240} />
+            <span
+              className={styles.companionMiniAvatar}
+              style={{ "--companion-cue": preferredCue.color } as React.CSSProperties}
+            >
+              <Image src="/tingle-user-character-v3.png" alt="Your round wooden Tingle memory companion" width={1243} height={1265} />
+              <i aria-hidden="true" />
+            </span>
             <span><b>{companionName || "My Tingle"}</b>{rememberedCount} remembered</span>
           </div>
           <Link href="/">About Tingle ↗</Link>
@@ -454,11 +496,28 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
             <p>Open an illustrated card to hear the word, choose a personal color cue, build it with wooden letters, and practice recall.</p>
           </div>
           <div className={styles.collectionHeader}>
-            <div><span>Illustrated cards ready</span><strong>{illustratedWords.length}</strong></div>
-            <p>Each sketch is matched to its exact word ID and learning pack.</p>
+            <div><span>Learning cards</span><strong>{words.length.toLocaleString()}</strong></div>
+            <p>Every card opens directly in the Learn area.</p>
+          </div>
+          <div className={styles.collectionTools}>
+            <input
+              value={query}
+              onChange={(event) => { setQuery(event.target.value); setCollectionLimit(60); }}
+              placeholder="Search all 2,000 cards"
+              aria-label="Search learning cards"
+            />
+            <select
+              value={pack}
+              onChange={(event) => { setPack(event.target.value === "all" ? "all" : Number(event.target.value)); setCollectionLimit(60); }}
+              aria-label="Filter learning cards by pack"
+            >
+              <option value="all">All 20 packs</option>
+              {Array.from({ length: 20 }, (_, index) => <option key={index + 1} value={index + 1}>Pack {String(index + 1).padStart(2, "0")}</option>)}
+            </select>
+            <span>{matchingWords.length.toLocaleString()} cards</span>
           </div>
           <div className={styles.cardCollection}>
-            {illustratedWords.map((word) => (
+            {visibleCollectionWords.map((word) => (
               <button
                 type="button"
                 className={styles.collectionCard}
@@ -467,13 +526,20 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
                 onClick={() => selectWord(word)}
               >
                 <div className={styles.collectionArtwork}>
-                  <Image
-                    src={word.thumbnailPath!}
-                    alt={word.imageAlt ?? `Tingle memory sketch for ${word.headword}`}
-                    width={480}
-                    height={360}
-                    sizes="(max-width: 680px) 44vw, (max-width: 1050px) 29vw, 210px"
-                  />
+                  {word.thumbnailPath ? (
+                    <Image
+                      src={word.thumbnailPath}
+                      alt={word.imageAlt ?? `Tingle memory sketch for ${word.headword}`}
+                      width={480}
+                      height={360}
+                      sizes="(max-width: 680px) 44vw, (max-width: 1050px) 29vw, 210px"
+                    />
+                  ) : (
+                    <div className={styles.collectionPlaceholder} aria-label={`Learning card for ${word.headword}`}>
+                      <strong>{word.headword.slice(0, 1).toUpperCase()}</strong>
+                      <small>WORD CARD</small>
+                    </div>
+                  )}
                   <span>Pack {String(word.pack).padStart(2, "0")}</span>
                 </div>
                 <div><strong>{word.headword}</strong><small>{word.wordId}</small></div>
@@ -481,6 +547,12 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
               </button>
             ))}
           </div>
+          {visibleCollectionWords.length === 0 && <p className={styles.noCards}>No cards match this search yet.</p>}
+          {collectionLimit < matchingWords.length && (
+            <button type="button" className={styles.showMoreCards} onClick={() => setCollectionLimit(collectionLimit + 60)}>
+              Show more learning cards
+            </button>
+          )}
           <section className={styles.archiveSection}>
             <div className={styles.archiveIntro}>
               <div>
@@ -560,12 +632,15 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
         <section className={styles.gamesView}>
           <div className={styles.viewIntro}>
             <div><p className={styles.kicker}>TINGLE RECALL GAMES</p><h1>Play to remember.</h1></div>
-            <p>Practice retrieval through short, tactile card games. Pair each sketch with its word, then strengthen recall with Word Bingo.</p>
+            <p>Practice retrieval through short, tactile card games. Pair each sketch with its word, then mark the correct word from each clue.</p>
           </div>
           <section className={styles.companionPanel} aria-label="Your Tingle companion">
-            <div className={styles.companionPortrait}>
-              <Image src="/tingle-user-character-v1.png" alt="Friendly wooden Tingle memory companion" width={1240} height={1240} priority />
-              <i style={{ backgroundColor: cue.color }} aria-hidden="true" />
+            <div
+              className={styles.companionPortrait}
+              style={{ "--companion-cue": preferredCue.color } as React.CSSProperties}
+            >
+              <Image src="/tingle-user-character-v3.png" alt="Friendly round wooden Tingle memory companion" width={1243} height={1265} priority />
+              <i aria-hidden="true" />
             </div>
             <div className={styles.companionCopy}>
               <p className={styles.kicker}>YOUR MEMORY COMPANION</p>
@@ -577,7 +652,7 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
             <div className={styles.companionProgress}>
               <span><b>{cueCount}</b> color cues</span>
               <span><b>{rememberedCount}</b> remembered</span>
-              <small><i style={{ backgroundColor: cue.color }} /> Current cue: {cue.name}</small>
+              <small><i style={{ backgroundColor: preferredCue.color }} /> Preferred cue: {preferredCue.name}</small>
             </div>
           </section>
           <div className={styles.pairPanel}>
@@ -609,7 +684,9 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
                     aria-label={isOpen ? `${card.kind === "picture" ? "Picture" : "Word"} card: ${word.headword}` : "Hidden pairing card"}
                     aria-pressed={isOpen}
                   >
-                    <span className={styles.pairCardBack}><i aria-hidden="true">✦</i><small>TINGLE</small></span>
+                    <span className={styles.pairCardBack}>
+                      <Image src="/tingle-wordmark-spark-v3.png" alt="Tingle" width={1774} height={887} />
+                    </span>
                     <span className={styles.pairCardFront}>
                       {card.kind === "picture" && word.thumbnailPath ? (
                         <Image src={word.thumbnailPath} alt={word.imageAlt ?? `Tingle memory sketch for ${word.headword}`} width={480} height={360} sizes="(max-width: 680px) 42vw, 220px" />
@@ -625,24 +702,35 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
           </div>
           <div className={styles.gamePanel}>
             <div className={styles.gameCopy}>
-              <span className={styles.livePill}>RECALL GAME 02 · WORD BINGO</span>
-              <h2>{bingo ? "Bingo!" : "Make one line."}</h2>
-              <p>{bingo ? "You completed a recall line. Start a fresh board when you’re ready." : "Choose a word, say it aloud, then tap the tile. Use your memory—not speed."}</p>
-              <button type="button" onClick={() => { setBingoSeed(bingoSeed + 1); setBingoMarks([]); }}>New board ↗</button>
-              <div className={styles.gameStats}><span><b>{cueCount}</b> words with cues</span><span><b>{rememberedCount}</b> remembered</span></div>
+              <span className={styles.livePill}>RECALL GAME 02 · DOT RECALL</span>
+              <h2>{dotComplete ? "All dots found!" : "Mark the right word."}</h2>
+              {dotComplete ? (
+                <p>You matched every clue. Start a fresh board when you&apos;re ready.</p>
+              ) : (
+                <div className={styles.dotClue}>
+                  <small>CLUE</small>
+                  <blockquote>{dotTargetWord?.definition}</blockquote>
+                  <span className={dotFeedback === "incorrect" ? styles.dotTryAgain : dotFeedback === "correct" ? styles.dotCorrect : ""}>
+                    {dotFeedback === "incorrect" ? "Try another word." : dotFeedback === "correct" ? "Correct — one memory dot earned." : "Tap the matching word to mark its dot."}
+                  </span>
+                </div>
+              )}
+              <button type="button" onClick={newDotBoard}>New board ↗</button>
+              <div className={styles.gameStats}><span><b>{dotMarks.length}/9</b> dots earned</span><span><b>{dotAttempts}</b> tries</span></div>
             </div>
-            <div className={`${styles.bingoBoard} ${bingo ? styles.hasBingo : ""}`}>
-              {bingoWords.map((word, index) => (
+            <div className={`${styles.bingoBoard} ${dotComplete ? styles.dotGameComplete : ""}`}>
+              {dotWords.map((word, index) => (
                 <button
                   type="button"
                   key={word.wordId}
-                  className={bingoMarks.includes(index) ? styles.markedTile : ""}
+                  className={dotMarks.includes(index) ? styles.markedTile : ""}
                   style={{ "--tile-color": cues[index % cues.length].color } as React.CSSProperties}
-                  onClick={() => setBingoMarks(bingoMarks.includes(index) ? bingoMarks.filter((item) => item !== index) : [...bingoMarks, index])}
+                  onClick={() => chooseDotWord(index)}
+                  aria-label={`${word.headword}${dotMarks.includes(index) ? ", correct word marked" : ""}`}
                 >
                   <small>{word.wordId.replace("TNG-", "")}</small>
                   <strong>{word.headword}</strong>
-                  <span>{bingoMarks.includes(index) ? "✓" : "+"}</span>
+                  <span className={styles.dotMarker} aria-hidden="true" />
                 </button>
               ))}
             </div>
