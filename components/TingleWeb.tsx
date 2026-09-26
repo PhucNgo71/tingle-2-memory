@@ -31,6 +31,8 @@ type Cue = { name: string; color: string; soft: string };
 type Progress = Record<string, { cue: string; remembered: boolean }>;
 type View = "learn" | "library" | "games";
 type PairCard = { key: string; wordId: string; kind: "picture" | "word" };
+type TopicId = "all" | "fruit" | "animals" | "food" | "home" | "body" | "people" | "nature" | "school" | "colors" | "numbers";
+type PurchaseFormat = "printed" | "digital";
 
 const cues: Cue[] = [
   { name: "Orange", color: "#ff7a00", soft: "#fff0df" },
@@ -44,6 +46,25 @@ const cues: Cue[] = [
 
 const STORAGE_KEY = "tingle-web-progress-v1";
 const COMPANION_NAME_KEY = "tingle-companion-name-v1";
+const CARD_CHECKOUT_URL = process.env.NEXT_PUBLIC_TINGLE_CARD_CHECKOUT_URL;
+
+const topicCollections: { id: TopicId; label: string; terms: string[] }[] = [
+  { id: "all", label: "All topics", terms: [] },
+  { id: "fruit", label: "Fruit", terms: ["apple", "avocado", "banana", "cherry", "coconut", "dragonfruit", "durian", "grape", "lime", "melon", "orange", "papaya", "pineapple", "pomegranate", "starfruit", "strawberry", "tamarind", "watermelon"] },
+  { id: "animals", label: "Animals", terms: ["bison", "cat", "crab", "crow", "deer", "dog", "dolphin", "duck", "elephant", "giraffe", "horse", "octopus", "owl", "penguin", "pig", "rabbit", "shark", "shrimp", "starfish", "swan", "tiger", "turkey", "turtle", "vulture", "walrus", "whale", "woodpecker"] },
+  { id: "food", label: "Food", terms: ["beefsteak", "cake", "cheese", "curry", "donut", "hamburger", "icecream", "pizza", "rice", "sandwich", "sausage", "soup", "spaghetti", "sushi", "taco"] },
+  { id: "home", label: "Home", terms: ["bed", "blanket", "bookshelf", "bottle", "box", "broom", "carpet", "chair", "curtain", "desklamp", "lamp", "shampoo", "sink", "soap", "sofa", "table", "television", "toothbrush", "toothpaste", "towel", "trashcan", "window"] },
+  { id: "body", label: "Body", terms: ["arm", "back", "belly", "bladder", "blood", "bone", "brain", "breast", "ear", "eye", "foot", "hand", "head", "heart", "kidney", "liver", "mouth", "nose", "shoulder", "spleen", "stomach", "thyroid", "tongue", "tooth"] },
+  { id: "people", label: "People", terms: ["astronaut", "barber", "bartender", "chef", "dancer", "detective", "doctor", "farmer", "nurse", "police", "singer", "student", "teacher", "waiter", "worker"] },
+  { id: "nature", label: "Nature", terms: ["beach", "canyon", "cave", "coral", "countryside", "desert", "forest", "island", "lake", "mountain", "river", "seaweed", "sky", "sun", "swamp", "volcano", "waterfall"] },
+  { id: "school", label: "School", terms: ["backpack", "book", "bookshelf", "calendar", "compass", "desklamp", "pencil", "school", "student", "teacher"] },
+  { id: "colors", label: "Colors", terms: ["black", "blue", "brown", "cyan", "green", "orange", "pink", "purple", "red", "white", "yellow"] },
+  { id: "numbers", label: "Numbers", terms: ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve"] },
+];
+
+function normalizeTopicLabel(value: string) {
+  return value.toLowerCase().replace(/[^a-z0-9]/g, "");
+}
 
 function getCue(name: string | undefined) {
   return cues.find((cue) => cue.name === name) ?? cues[0];
@@ -72,8 +93,12 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
   const [selectedId, setSelectedId] = useState(initialWord.wordId);
   const [query, setQuery] = useState("");
   const [archiveQuery, setArchiveQuery] = useState("");
+  const [archiveTopic, setArchiveTopic] = useState<TopicId>("fruit");
   const [archiveLimit, setArchiveLimit] = useState(48);
   const [collectionLimit, setCollectionLimit] = useState(60);
+  const [purchaseOpen, setPurchaseOpen] = useState(false);
+  const [purchaseFormat, setPurchaseFormat] = useState<PurchaseFormat>("printed");
+  const [purchaseQuantity, setPurchaseQuantity] = useState(1);
   const [pack, setPack] = useState<number | "all">("all");
   const [progress, setProgress] = useState<Progress>({});
   const [cardFlipped, setCardFlipped] = useState(false);
@@ -205,13 +230,30 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
     [words],
   );
 
+  const activeTopic = topicCollections.find((topic) => topic.id === archiveTopic) ?? topicCollections[0];
+
+  const topicCounts = useMemo(
+    () => new Map(topicCollections.map((topic) => [
+      topic.id,
+      topic.id === "all"
+        ? archiveCards.length
+        : archiveCards.filter((card) => topic.terms.includes(normalizeTopicLabel(card.label))).length,
+    ])),
+    [archiveCards],
+  );
+
   const filteredArchiveCards = useMemo(() => {
     const normalizedQuery = archiveQuery.trim().toLowerCase();
-    if (!normalizedQuery) return archiveCards;
-    return archiveCards.filter((card) => card.label.toLowerCase().includes(normalizedQuery));
-  }, [archiveCards, archiveQuery]);
+    return archiveCards
+      .filter((card) => archiveTopic === "all" || activeTopic.terms.includes(normalizeTopicLabel(card.label)))
+      .filter((card) => !normalizedQuery || card.label.toLowerCase().includes(normalizedQuery));
+  }, [activeTopic.terms, archiveCards, archiveQuery, archiveTopic]);
 
   const visibleArchiveCards = filteredArchiveCards.slice(0, archiveLimit);
+
+  const purchaseUrl = CARD_CHECKOUT_URL
+    ? `${CARD_CHECKOUT_URL}${CARD_CHECKOUT_URL.includes("?") ? "&" : "?"}topic=${encodeURIComponent(activeTopic.id)}&format=${purchaseFormat}&quantity=${purchaseQuantity}`
+    : `/?interest=cards&topic=${encodeURIComponent(activeTopic.id)}&format=${purchaseFormat}&quantity=${purchaseQuantity}#early-access`;
 
   const pairWords = useMemo(() => {
     if (!illustratedWords.length) return [];
@@ -306,7 +348,7 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
           <Image src="/tingle-wordmark-spark-v3.png" alt="Tingle" width={1774} height={887} priority />
         </Link>
         <nav className={styles.nav} aria-label="Tingle Web sections">
-          {(["learn", "library", "games"] as View[]).map((item) => (
+          {(["library", "learn", "games"] as View[]).map((item) => (
             <button key={item} type="button" className={view === item ? styles.activeNav : ""} onClick={() => setView(item)}>
               {item === "learn" ? "Learn" : item === "library" ? "Cards collection" : "Recall games"}
             </button>
@@ -495,6 +537,128 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
             <div><p className={styles.kicker}>CARDS COLLECTION</p><h1>See it. Recall it.</h1></div>
             <p>Open an illustrated card to hear the word, choose a personal color cue, build it with wooden letters, and practice recall.</p>
           </div>
+          <section className={styles.topicSection}>
+            <div className={styles.archiveIntro}>
+              <div>
+                <p className={styles.kicker}>BROWSE BY TOPIC</p>
+                <h2>{activeTopic.id === "all" ? "Everyday sketch cards." : `${activeTopic.label} cards.`}</h2>
+                <p>Start with concrete, familiar topics. Choose a group, see the sketch, say the word, and build a stronger memory connection.</p>
+              </div>
+              <div className={styles.archiveActions}>
+                <div className={styles.archiveCount}><strong>{filteredArchiveCards.length}</strong><span>{activeTopic.label.toLowerCase()} cards</span></div>
+                <button type="button" className={styles.buyPackButton} onClick={() => setPurchaseOpen(true)}>
+                  Buy {activeTopic.id === "all" ? "the complete collection" : "this card pack"} <span aria-hidden="true">↗</span>
+                </button>
+              </div>
+            </div>
+            <div className={styles.topicRail} aria-label="Card topics">
+              {topicCollections.map((topic) => (
+                <button
+                  type="button"
+                  key={topic.id}
+                  className={archiveTopic === topic.id ? styles.activeTopic : ""}
+                  aria-pressed={archiveTopic === topic.id}
+                  onClick={() => { setArchiveTopic(topic.id); setArchiveQuery(""); setArchiveLimit(48); setPurchaseOpen(false); }}
+                >
+                  <span>{topic.label}</span>
+                  <small>{topicCounts.get(topic.id)}</small>
+                </button>
+              ))}
+            </div>
+            <div className={styles.archiveTools}>
+              <input
+                value={archiveQuery}
+                onChange={(event) => { setArchiveQuery(event.target.value); setArchiveLimit(48); }}
+                placeholder={`Search ${activeTopic.label.toLowerCase()} cards`}
+                aria-label={`Search ${activeTopic.label.toLowerCase()} cards`}
+              />
+              <span>{filteredArchiveCards.length} cards</span>
+            </div>
+            <div className={styles.archiveGrid}>
+              {visibleArchiveCards.map((card) => {
+                const linkedWord = card.wordId ? wordsById.get(card.wordId) : undefined;
+                return (
+                  <article
+                    className={styles.archiveCard}
+                    key={card.archiveId}
+                    style={{ "--card-cue": getCue(linkedWord ? progress[linkedWord.wordId]?.cue : undefined).color } as React.CSSProperties}
+                  >
+                    <div className={styles.archiveArtwork}>
+                      <Image src={card.imagePath} alt={`Tingle sketch card for ${card.label}`} width={480} height={480} sizes="(max-width: 680px) 44vw, (max-width: 1050px) 22vw, 180px" />
+                    </div>
+                    <div className={styles.archiveMeta}>
+                      <strong>{card.label}</strong>
+                      {linkedWord ? (
+                        <button type="button" onClick={() => selectWord(linkedWord)}>Open learning card →</button>
+                      ) : (
+                        <span>Topic sketch</span>
+                      )}
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+            {filteredArchiveCards.length === 0 && <p className={styles.noCards}>No cards match this topic and search.</p>}
+            {archiveLimit < filteredArchiveCards.length && (
+              <button type="button" className={styles.showMoreArchive} onClick={() => setArchiveLimit(archiveLimit + 48)}>
+                Show more topic cards
+              </button>
+            )}
+          </section>
+          {purchaseOpen && (
+            <div
+              className={styles.purchaseOverlay}
+              onMouseDown={(event) => { if (event.target === event.currentTarget) setPurchaseOpen(false); }}
+            >
+              <section className={styles.purchasePanel} role="dialog" aria-modal="true" aria-labelledby="purchase-title">
+                <button type="button" className={styles.purchaseClose} onClick={() => setPurchaseOpen(false)} aria-label="Close card purchase panel">×</button>
+                <p className={styles.kicker}>BUY YOUR CARDS</p>
+                <h2 id="purchase-title">{activeTopic.id === "all" ? "Complete card collection" : `${activeTopic.label} card pack`}</h2>
+                <p className={styles.purchaseLead}>Choose how you want to learn with your Tingle cards. Your selected pack contains {topicCounts.get(activeTopic.id)} sketch cards.</p>
+
+                <div className={styles.purchaseFormats} aria-label="Card format">
+                  <button
+                    type="button"
+                    className={purchaseFormat === "printed" ? styles.selectedPurchaseFormat : ""}
+                    aria-pressed={purchaseFormat === "printed"}
+                    onClick={() => setPurchaseFormat("printed")}
+                  >
+                    <span aria-hidden="true">▱</span>
+                    <strong>Printed cards</strong>
+                    <small>Tactile cards for hands-on play</small>
+                  </button>
+                  <button
+                    type="button"
+                    className={purchaseFormat === "digital" ? styles.selectedPurchaseFormat : ""}
+                    aria-pressed={purchaseFormat === "digital"}
+                    onClick={() => setPurchaseFormat("digital")}
+                  >
+                    <span aria-hidden="true">◫</span>
+                    <strong>Digital cards</strong>
+                    <small>Open and practice online</small>
+                  </button>
+                </div>
+
+                <div className={styles.purchaseQuantity}>
+                  <div><strong>Quantity</strong><span>{purchaseFormat === "printed" ? "Physical card packs" : "Digital access packs"}</span></div>
+                  <div className={styles.quantityControl} aria-label="Quantity selector">
+                    <button type="button" onClick={() => setPurchaseQuantity(Math.max(1, purchaseQuantity - 1))} disabled={purchaseQuantity === 1} aria-label="Decrease quantity">−</button>
+                    <strong aria-live="polite">{purchaseQuantity}</strong>
+                    <button type="button" onClick={() => setPurchaseQuantity(Math.min(10, purchaseQuantity + 1))} disabled={purchaseQuantity === 10} aria-label="Increase quantity">+</button>
+                  </div>
+                </div>
+
+                <a className={styles.checkoutButton} href={purchaseUrl}>
+                  {CARD_CHECKOUT_URL ? "Continue to secure checkout" : "Reserve this card pack"} <span aria-hidden="true">→</span>
+                </a>
+                <p className={styles.checkoutNote}>
+                  {CARD_CHECKOUT_URL
+                    ? "You will continue to Tingle’s secure payment page."
+                    : "No payment is collected yet. We’ll take you to the early-access form to reserve your selected pack."}
+                </p>
+              </section>
+            </div>
+          )}
           <div className={styles.collectionHeader}>
             <div><span>Learning cards</span><strong>{words.length.toLocaleString()}</strong></div>
             <p>Every card opens directly in the Learn area.</p>
@@ -553,54 +717,6 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
               Show more learning cards
             </button>
           )}
-          <section className={styles.archiveSection}>
-            <div className={styles.archiveIntro}>
-              <div>
-                <p className={styles.kicker}>THE TINGLE VISUAL LIBRARY</p>
-                <h2>Illustration collection.</h2>
-                <p>Visual references from the Tingle collection—organized alongside our sketch-memory cards.</p>
-              </div>
-              <div className={styles.archiveCount}><strong>{archiveCards.length}</strong><span>archive visuals</span></div>
-            </div>
-            <div className={styles.archiveTools}>
-              <input
-                value={archiveQuery}
-                onChange={(event) => { setArchiveQuery(event.target.value); setArchiveLimit(48); }}
-                placeholder="Search the illustration archive"
-                aria-label="Search the illustration archive"
-              />
-              <span>{filteredArchiveCards.length} visuals</span>
-            </div>
-            <div className={styles.archiveGrid}>
-              {visibleArchiveCards.map((card) => {
-                const linkedWord = card.wordId ? wordsById.get(card.wordId) : undefined;
-                return (
-                  <article
-                    className={styles.archiveCard}
-                    key={card.archiveId}
-                    style={{ "--card-cue": getCue(linkedWord ? progress[linkedWord.wordId]?.cue : undefined).color } as React.CSSProperties}
-                  >
-                    <div className={styles.archiveArtwork}>
-                      <Image src={card.imagePath} alt={`Tingle illustration for ${card.label}`} width={480} height={480} sizes="(max-width: 680px) 44vw, (max-width: 1050px) 22vw, 180px" />
-                    </div>
-                    <div className={styles.archiveMeta}>
-                      <strong>{card.label}</strong>
-                      {linkedWord ? (
-                        <button type="button" onClick={() => selectWord(linkedWord)}>Open learning card →</button>
-                      ) : (
-                        <span>Archive visual</span>
-                      )}
-                    </div>
-                  </article>
-                );
-              })}
-            </div>
-            {archiveLimit < filteredArchiveCards.length && (
-              <button type="button" className={styles.showMoreArchive} onClick={() => setArchiveLimit(archiveLimit + 48)}>
-                Show more illustrations
-              </button>
-            )}
-          </section>
           <div className={styles.catalogueHeading}>
             <p className={styles.kicker}>2,000-WORD FOUNDATION</p>
             <h2>Search the complete word catalogue.</h2>
