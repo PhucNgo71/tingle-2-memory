@@ -206,6 +206,50 @@ export default function Home() {
               <div>{cueOptions.map(option => <i key={option.name} title={option.name} style={{ backgroundColor: option.color }} />)}</div>
             </div>
           </div>
+          <section className="printed-pack-panel" aria-labelledby="printed-pack-title">
+            <div className="printed-card-visual" aria-label="Tingle printed card package with fruit, animal, and school sketch cards">
+              <div className="printed-pack-box">
+                <span className="printed-pack-brand">tingle</span>
+                <strong>Topic Card Pack</strong>
+                <small>See it · Say it · Build it · Recall it</small>
+                <div className="printed-pack-colors" aria-hidden="true">
+                  {cueOptions.map(option => <i key={option.name} style={{ backgroundColor: option.color }} />)}
+                </div>
+              </div>
+              <div className="printed-card-fan">
+                {[
+                  ["/archive-images/v1/cards/apple.webp", "apple", "Fruit"],
+                  ["/archive-images/v1/cards/cat.webp", "cat", "Animals"],
+                  ["/archive-images/v1/cards/book.webp", "book", "School"],
+                ].map(([src, word, topic], index) => (
+                  <article className={`printed-sample-card printed-sample-${index + 1}`} key={word}>
+                    <span>{topic}</span>
+                    <Image src={src} alt={`Monochrome Tingle sketch for ${word}`} width={480} height={480} />
+                    <strong>{word}</strong>
+                    <i style={{ backgroundColor: cueOptions[index].color }} aria-hidden="true" />
+                  </article>
+                ))}
+              </div>
+            </div>
+            <div className="printed-pack-copy">
+              <p className="section-number">PRINTED CARD PACKAGE</p>
+              <h3 id="printed-pack-title">A tactile card pack for every topic.</h3>
+              <p>Each reusable pack brings Tingle&apos;s calm sketch cards into hands-on learning. Learners see the picture, say the word, build it with wooden letters, then choose the same personal color cue in the app.</p>
+              <div className="printed-spec-grid">
+                <div><strong>24</strong><span>curated cards per topic</span></div>
+                <div><strong>70 × 100 mm</strong><span>comfortable child-friendly size</span></div>
+                <div><strong>Matte</strong><span>thick, rounded and wipe-clean</span></div>
+                <div><strong>Front + back</strong><span>sketch and word · sound, meaning and prompt</span></div>
+              </div>
+              <div className="printed-topic-line">
+                <span>Fruit</span><span>Animals</span><span>Food</span><span>Home</span><span>Nature</span><span>School</span><span>More</span>
+              </div>
+              <div className="printed-pack-footer">
+                <p><strong>Starter Collection</strong><span>Several topic packs together in one reusable Tingle storage box.</span></p>
+                <Link className="button" href="/learn">Explore card packs <span aria-hidden="true">→</span></Link>
+              </div>
+            </div>
+          </section>
           <div className="kit-details" aria-label="What comes in the physical Tingle kit">
             {[
               ["01", "Organized wooden box", "Dedicated compartments keep the alphabet, board, cards, and pouch ready for the next learning session."],

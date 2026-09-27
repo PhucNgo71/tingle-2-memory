@@ -125,6 +125,36 @@ a { color: inherit; text-decoration: none; }
 .seven-cue-legend > span { color: var(--muted); font-size: .65rem; font-weight: 850; letter-spacing: .08em; text-transform: uppercase; }
 .seven-cue-legend > div { display: flex; gap: .3rem; }
 .seven-cue-legend i { width: .72rem; height: .72rem; border: 2px solid white; border-radius: 50%; box-shadow: 0 0 0 1px rgba(39,37,34,.08); }
+.printed-pack-panel { display: grid; grid-column: 1 / -1; gap: clamp(2rem,5vw,4.5rem); align-items: center; overflow: hidden; border: 1px solid rgba(39,37,34,.09); border-radius: 2rem; background: #fffaf2; padding: clamp(1.25rem,4vw,3.5rem); box-shadow: 0 20px 60px rgba(92,65,32,.08); }
+.printed-card-visual { position: relative; min-height: 470px; perspective: 1000px; }
+.printed-pack-box { position: absolute; inset: 9% 8% 8% 3%; display: flex; flex-direction: column; justify-content: flex-end; overflow: hidden; border: 1px solid #c59a64; border-radius: 1.7rem; background: linear-gradient(145deg,#e5bd85,#bb8650); padding: 2rem; color: #4e351f; box-shadow: inset -14px -16px 28px rgba(91,53,17,.12),0 28px 60px rgba(92,65,32,.18); transform: rotate(-2deg); }
+.printed-pack-box:before { content: ""; position: absolute; inset: 1rem; border: 1px solid rgba(89,55,21,.16); border-radius: 1.15rem; }
+.printed-pack-brand { position: relative; color: var(--orange); font-family: var(--font-nunito),"Avenir Next Rounded","Arial Rounded MT Bold",sans-serif; font-size: 2.15rem; font-weight: 900; letter-spacing: -.07em; }
+.printed-pack-box strong { position: relative; margin-top: .15rem; font-family: var(--font-nunito),"Avenir Next Rounded","Arial Rounded MT Bold",sans-serif; font-size: 1.15rem; }
+.printed-pack-box small { position: relative; margin-top: .45rem; color: rgba(78,53,31,.68); font-size: .65rem; font-weight: 750; }
+.printed-pack-colors { position: relative; display: flex; gap: .28rem; margin-top: 1rem; }
+.printed-pack-colors i { width: .65rem; height: .65rem; border: 2px solid rgba(255,255,255,.75); border-radius: 50%; box-shadow: 0 0 0 1px rgba(78,53,31,.1); }
+.printed-card-fan { position: absolute; z-index: 2; inset: 0; }
+.printed-sample-card { position: absolute; right: 2%; top: 5%; width: min(42%,190px); aspect-ratio: 7 / 10; display: flex; flex-direction: column; overflow: hidden; border: 1px solid rgba(39,37,34,.1); border-radius: 1.25rem; background: #fffdf9; padding: .8rem; box-shadow: 0 20px 42px rgba(66,49,26,.17); transform-origin: bottom center; }
+.printed-sample-card > span { color: var(--muted); font-size: .55rem; font-weight: 900; letter-spacing: .13em; text-transform: uppercase; }
+.printed-sample-card img { width: 100%; flex: 1; min-height: 0; object-fit: contain; filter: grayscale(1) sepia(.08) contrast(.94); mix-blend-mode: multiply; }
+.printed-sample-card strong { font-family: var(--font-nunito),"Avenir Next Rounded","Arial Rounded MT Bold",sans-serif; font-size: 1.35rem; line-height: 1; }
+.printed-sample-card > i { position: absolute; right: .75rem; bottom: .75rem; width: .75rem; height: .75rem; border: 3px solid white; border-radius: 50%; box-shadow: 0 1px 5px rgba(39,37,34,.2); }
+.printed-sample-1 { right: 24%; top: 1%; transform: rotate(-10deg); }
+.printed-sample-2 { right: 11%; top: 5%; transform: rotate(-1deg); }
+.printed-sample-3 { right: -1%; top: 10%; transform: rotate(9deg); }
+.printed-pack-copy h3 { margin-top: .75rem; font-family: var(--font-nunito),"Avenir Next Rounded","Arial Rounded MT Bold",sans-serif; font-size: clamp(2.5rem,4.5vw,4.5rem); font-weight: 650; letter-spacing: -.055em; line-height: .96; }
+.printed-pack-copy > p:nth-of-type(2) { max-width: 650px; margin-top: 1.3rem; color: var(--muted); font-size: 1rem; line-height: 1.75; }
+.printed-spec-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .65rem; margin-top: 1.6rem; }
+.printed-spec-grid > div { min-height: 105px; display: flex; flex-direction: column; justify-content: space-between; border: 1px solid rgba(39,37,34,.08); border-radius: 1rem; background: white; padding: .9rem; }
+.printed-spec-grid strong { color: var(--orange); font-family: var(--font-nunito),"Avenir Next Rounded","Arial Rounded MT Bold",sans-serif; font-size: 1.15rem; }
+.printed-spec-grid span { color: var(--muted); font-size: .7rem; line-height: 1.35; }
+.printed-topic-line { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: 1rem; }
+.printed-topic-line span { border: 1px solid rgba(39,37,34,.1); border-radius: 999px; background: #fffdf9; padding: .5rem .7rem; color: var(--muted); font-size: .65rem; font-weight: 800; }
+.printed-pack-footer { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; margin-top: 1.5rem; border-top: 1px solid rgba(39,37,34,.1); padding-top: 1.25rem; }
+.printed-pack-footer p { display: flex; flex-direction: column; gap: .25rem; }
+.printed-pack-footer p > span { max-width: 330px; color: var(--muted); font-size: .7rem; line-height: 1.4; }
+.printed-pack-footer .button { flex: none; min-height: 46px; font-size: .78rem; }
 .kit-details { display: grid; grid-column: 1 / -1; gap: .8rem; border-top: 1px solid rgba(39,37,34,.11); padding-top: 2rem; }
 .kit-detail { min-height: 210px; border: 1px solid rgba(39,37,34,.09); border-radius: 1.35rem; background: rgba(255,252,247,.64); padding: 1.35rem; }
 .kit-detail > span { color: var(--orange); font-size: .7rem; font-weight: 900; letter-spacing: .16em; }
@@ -166,6 +196,7 @@ a { color: inherit; text-decoration: none; }
 }
 @media (min-width: 1024px) {
   .blocks-panel { grid-template-columns: 1fr 1fr; align-items: center; }
+  .printed-pack-panel { grid-template-columns: .9fr 1.1fr; }
   .kit-details { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .coming-panel { grid-template-columns: 1.15fr .85fr; align-items: center; }
 }
@@ -184,6 +215,13 @@ a { color: inherit; text-decoration: none; }
   .hero-flow > span { gap: .3rem; font-size: .62rem; }
   .hero-flow b { width: 1.35rem; height: 1.35rem; }
   .seven-cue-legend { position: static; justify-content: space-between; border: 0; border-top: 1px solid rgba(39,37,34,.08); border-radius: 0; box-shadow: none; }
+  .printed-card-visual { min-height: 390px; }
+  .printed-sample-card { width: min(39%,145px); }
+  .printed-pack-box { inset: 12% 5% 5% 0; }
+  .printed-spec-grid { grid-template-columns: 1fr; }
+  .printed-spec-grid > div { min-height: 88px; }
+  .printed-pack-footer { align-items: stretch; flex-direction: column; }
+  .printed-pack-footer .button { width: 100%; }
   .signup-form { flex-direction: column; border-radius: 1.5rem; }
   .signup-form button { justify-content: center; }
 }
