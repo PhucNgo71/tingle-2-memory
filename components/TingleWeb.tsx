@@ -662,14 +662,14 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
             </div>
           )}
           <div className={styles.collectionHeader}>
-            <div><span>Learning cards</span><strong>{words.length.toLocaleString()}</strong></div>
+            <div><span>Learning cards</span></div>
             <p>Every card opens directly in the Learn area.</p>
           </div>
           <div className={styles.collectionTools}>
             <input
               value={query}
               onChange={(event) => { setQuery(event.target.value); setCollectionLimit(60); }}
-              placeholder="Search all 2,000 cards"
+              placeholder="Search learning cards"
               aria-label="Search learning cards"
             />
             <select
@@ -680,7 +680,6 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
               <option value="all">All 20 packs</option>
               {Array.from({ length: 20 }, (_, index) => <option key={index + 1} value={index + 1}>Pack {String(index + 1).padStart(2, "0")}</option>)}
             </select>
-            <span>{matchingWords.length.toLocaleString()} cards</span>
           </div>
           <div className={styles.cardCollection}>
             {visibleCollectionWords.map((word) => (
