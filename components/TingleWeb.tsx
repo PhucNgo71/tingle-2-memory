@@ -95,7 +95,6 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
   const [archiveQuery, setArchiveQuery] = useState("");
   const [archiveTopic, setArchiveTopic] = useState<TopicId>("fruit");
   const [archiveLimit, setArchiveLimit] = useState(48);
-  const [collectionLimit, setCollectionLimit] = useState(60);
   const [purchaseOpen, setPurchaseOpen] = useState(false);
   const [purchaseFormat, setPurchaseFormat] = useState<PurchaseFormat>("printed");
   const [purchaseQuantity, setPurchaseQuantity] = useState(1);
@@ -218,7 +217,6 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
   }, [pack, query, words]);
 
   const filteredWords = matchingWords.slice(0, 80);
-  const visibleCollectionWords = matchingWords.slice(0, collectionLimit);
 
   const illustratedWords = useMemo(
     () => words.filter((word) => word.imageStatus === "approved" && word.thumbnailPath),
@@ -661,66 +659,6 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
               </section>
             </div>
           )}
-          <div className={styles.collectionTools}>
-            <input
-              value={query}
-              onChange={(event) => { setQuery(event.target.value); setCollectionLimit(60); }}
-              placeholder="Type a word…"
-              aria-label="Search learning cards"
-            />
-          </div>
-          <div className={styles.cardCollection}>
-            {visibleCollectionWords.map((word) => (
-              <button
-                type="button"
-                className={styles.collectionCard}
-                key={word.wordId}
-                style={{ "--card-cue": getCue(progress[word.wordId]?.cue).color } as React.CSSProperties}
-                onClick={() => selectWord(word)}
-              >
-                <div className={styles.collectionArtwork}>
-                  {word.thumbnailPath ? (
-                    <Image
-                      src={word.thumbnailPath}
-                      alt={word.imageAlt ?? `Tingle memory sketch for ${word.headword}`}
-                      width={480}
-                      height={360}
-                      sizes="(max-width: 680px) 44vw, (max-width: 1050px) 29vw, 210px"
-                    />
-                  ) : (
-                    <div className={styles.collectionPlaceholder} aria-label={`Learning card for ${word.headword}`}>
-                      <strong>{word.headword.slice(0, 1).toUpperCase()}</strong>
-                      <small>WORD CARD</small>
-                    </div>
-                  )}
-                  <span>Pack {String(word.pack).padStart(2, "0")}</span>
-                </div>
-                <div><strong>{word.headword}</strong><small>{word.wordId}</small></div>
-                <i aria-hidden="true">→</i>
-              </button>
-            ))}
-          </div>
-          {visibleCollectionWords.length === 0 && <p className={styles.noCards}>No cards match this search yet.</p>}
-          {collectionLimit < matchingWords.length && (
-            <button type="button" className={styles.showMoreCards} onClick={() => setCollectionLimit(collectionLimit + 60)}>
-              Show more learning cards
-            </button>
-          )}
-          <div className={styles.libraryTools}>
-            <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Type a word…" aria-label="Search the word library" />
-          </div>
-          <div className={styles.wordTable}>
-            <div className={styles.tableHead}><span>Word</span><span>Meaning</span><span>Pack</span><span>Status</span><span /></div>
-            {filteredWords.map((word) => (
-              <button type="button" className={styles.wordRow} key={word.wordId} onClick={() => selectWord(word)}>
-                <strong>{word.headword}</strong>
-                <span>{word.definition}</span>
-                <small>{String(word.pack).padStart(2, "0")}</small>
-                <small className={progress[word.wordId]?.remembered ? styles.doneStatus : ""}>{progress[word.wordId]?.remembered ? "Remembered" : progress[word.wordId] ? `${progress[word.wordId].cue} cue` : word.imageStatus === "approved" ? "Sketch ready" : "New"}</small>
-                <i>→</i>
-              </button>
-            ))}
-          </div>
         </section>
       )}
 
