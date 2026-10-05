@@ -274,7 +274,24 @@ export default function Home() {
             <h2 className="mt-7 font-serif text-[clamp(3rem,5.4vw,5.6rem)] leading-[0.95] tracking-[-0.05em]">Draw Your Own<br /><em>belongs to Phase 2.</em></h2>
             <p className="mt-7 max-w-xl text-lg leading-8 text-tingle-muted">Drawing is not a Phase 1 feature. Coming next: learners will scan their own drawings, use AI sketch cleanup, and bring those drawings to life with animation. Phase 1 scans arranged letters only.</p>
           </div>
-          <div className="phase-divider"><span className="phase active"><b>Phase 1</b> Build · scan letters · remember</span><span className="phase-line" /><span className="phase"><b>Phase 2</b> Draw · clean · animate</span></div>
+          <div className="phase-divider"><span className="phase active"><b>Phase 1</b> Build · scan letters · remember</span><span className="phase-line" /><span className="phase"><b>Phase 2</b> Draw · clean · animate</span><span className="phase-line" /><span className="phase"><b>Phase 3</b> Tingle Friend · learn together</span></div>
+        </div>
+      </section>
+
+      <section id="tingle-friend" className="section-shell pt-6">
+        <div className="blocks-panel">
+          <div className="max-w-xl">
+            <span className="coming-pill">FUTURE VISION · PHASE 3</span>
+            <h2 className="mt-7 font-serif text-[clamp(3rem,5vw,5.2rem)] leading-[0.95] tracking-[-0.05em]">Meet Tingle Friend.<br /><em>Learn together.</em></h2>
+            <p className="mt-7 text-lg leading-8 text-tingle-muted">A curious, playful companion to help children discover something new every day. Tingle Friend will guide learning journeys, play recall games alongside the learner, and celebrate growing confidence.</p>
+            <ul className="mt-8 grid gap-3 sm:grid-cols-2">
+              {["Daily discoveries", "Play and recall together", "Personal color cues", "Encouraging progress"].map(item => <li className="check-item" key={item}><span>✓</span>{item}</li>)}
+            </ul>
+            <p className="mt-7 text-sm leading-6 text-tingle-muted">Planned for Phase 3: begin with a digital learning friend, then explore a physical companion that connects with the Tingle Playbox.</p>
+          </div>
+          <div className="flex items-center justify-center rounded-[2rem] bg-tingle-paper p-8">
+            <Image src="/tingle-user-character-v3.png" alt="Tingle Friend concept: a smiling wooden companion with a small sprout and orange memory cue" width={1024} height={1024} sizes="(max-width: 1024px) 80vw, 35vw" className="h-auto w-full max-w-[380px] object-contain" />
+          </div>
         </div>
       </section>
 
