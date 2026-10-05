@@ -307,17 +307,20 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
   }, [selected, words]);
 
   const dotWords = useMemo(() => {
-    const start = (dotSeed * 9 * 17) % Math.max(1, words.length - 9);
-    return words.slice(start, start + 9);
-  }, [dotSeed, words]);
+    const pool = illustratedWords.length >= 30 ? illustratedWords : words;
+    return shuffleWithSeed(pool, dotSeed + 731).slice(0, 30);
+  }, [dotSeed, illustratedWords, words]);
 
-  const dotComplete = dotWords.length > 0 && dotMarks.length === dotWords.length;
-  const dotTargetWord = dotWords[dotTarget] ?? dotWords[0];
+  const huntTargets = useMemo(() => shuffleWithSeed(dotWords.map((_, index) => index), dotSeed + 913).slice(0, 5), [dotWords, dotSeed]);
+
+  const dotComplete = huntTargets.length > 0 && dotMarks.length === huntTargets.length;
+  const targetIndex = huntTargets[dotTarget];
+  const dotTargetWord = dotWords[targetIndex];
 
   function chooseDotWord(index: number) {
     if (dotComplete || dotMarks.includes(index)) return;
     setDotAttempts((current) => current + 1);
-    if (index !== dotTarget) {
+    if (index !== targetIndex) {
       setDotFeedback("incorrect");
       return;
     }
@@ -325,15 +328,14 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
     const nextMarks = [...dotMarks, index];
     setDotMarks(nextMarks);
     setDotFeedback("correct");
-    const nextTarget = dotWords.findIndex((_, wordIndex) => !nextMarks.includes(wordIndex));
-    if (nextTarget >= 0) setDotTarget(nextTarget);
+    setDotTarget((current) => Math.min(current + 1, huntTargets.length - 1));
   }
 
   function newDotBoard() {
     const nextSeed = dotSeed + 1;
     setDotSeed(nextSeed);
     setDotMarks([]);
-    setDotTarget(nextSeed % 9);
+    setDotTarget(0);
     setDotAttempts(0);
     setDotFeedback(null);
   }
@@ -818,35 +820,36 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
           </div>
           <div className={styles.gamePanel}>
             <div className={styles.gameCopy}>
-              <span className={styles.livePill}>RECALL GAME 02 · DOT RECALL</span>
-              <h2>{dotComplete ? "All dots found!" : "Mark the right word."}</h2>
+              <span className={styles.livePill}>RECALL GAME 02 · WORD HUNT</span>
+              <h2>{dotComplete ? "You found them all!" : "Find the word."}</h2>
               {dotComplete ? (
-                <p>You matched every clue. Start a fresh board when you&apos;re ready.</p>
+                <p>You found five hidden answers among the words. Try a new word hunt when you&apos;re ready.</p>
               ) : (
                 <div className={styles.dotClue}>
                   <small>CLUE</small>
+                  {dotTargetWord?.thumbnailPath && <Image src={dotTargetWord.thumbnailPath} alt="Sketch clue for the word to find" width={180} height={180} className={styles.huntClueImage} />}
                   <blockquote>{dotTargetWord?.definition}</blockquote>
                   <span className={dotFeedback === "incorrect" ? styles.dotTryAgain : dotFeedback === "correct" ? styles.dotCorrect : ""}>
-                    {dotFeedback === "incorrect" ? "Try another word." : dotFeedback === "correct" ? "Correct — one memory dot earned." : "Tap the matching word to mark its dot."}
+                    {dotFeedback === "incorrect" ? "Keep looking — try another word." : "Find the word that matches this clue among all the words."}
                   </span>
                 </div>
               )}
-              <button type="button" onClick={newDotBoard}>New board ↗</button>
-              <div className={styles.gameStats}><span><b>{dotMarks.length}/9</b> dots earned</span><span><b>{dotAttempts}</b> tries</span></div>
+              <button type="button" onClick={newDotBoard}>New word hunt ↗</button>
+              <div className={styles.gameStats}><span><b>{dotMarks.length}/{huntTargets.length}</b> words found</span><span><b>{dotAttempts}</b> tries</span></div>
             </div>
-            <div className={`${styles.bingoBoard} ${dotComplete ? styles.dotGameComplete : ""}`}>
+            <div className={`${styles.wordHuntBoard} ${dotComplete ? styles.dotGameComplete : ""}`}>
               {dotWords.map((word, index) => (
                 <button
                   type="button"
                   key={word.wordId}
-                  className={dotMarks.includes(index) ? styles.markedTile : ""}
+                  className={dotMarks.includes(index) ? styles.huntFound : ""}
+                  disabled={dotComplete || dotMarks.includes(index)}
                   style={{ "--tile-color": cues[index % cues.length].color } as React.CSSProperties}
                   onClick={() => chooseDotWord(index)}
                   aria-label={`${word.headword}${dotMarks.includes(index) ? ", correct word marked" : ""}`}
                 >
-                  <small>{word.wordId.replace("TNG-", "")}</small>
                   <strong>{word.headword}</strong>
-                  <span className={styles.dotMarker} aria-hidden="true" />
+                  {dotMarks.includes(index) && <span aria-hidden="true">✓</span>}
                 </button>
               ))}
             </div>
