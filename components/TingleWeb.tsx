@@ -661,25 +661,13 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
               </section>
             </div>
           )}
-          <div className={styles.collectionHeader}>
-            <div><span>Learning cards</span></div>
-            <p>Every card opens directly in the Learn area.</p>
-          </div>
           <div className={styles.collectionTools}>
             <input
               value={query}
               onChange={(event) => { setQuery(event.target.value); setCollectionLimit(60); }}
-              placeholder="Search learning cards"
+              placeholder="Type a word…"
               aria-label="Search learning cards"
             />
-            <select
-              value={pack}
-              onChange={(event) => { setPack(event.target.value === "all" ? "all" : Number(event.target.value)); setCollectionLimit(60); }}
-              aria-label="Filter learning cards by pack"
-            >
-              <option value="all">All 20 packs</option>
-              {Array.from({ length: 20 }, (_, index) => <option key={index + 1} value={index + 1}>Pack {String(index + 1).padStart(2, "0")}</option>)}
-            </select>
           </div>
           <div className={styles.cardCollection}>
             {visibleCollectionWords.map((word) => (
@@ -718,17 +706,8 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
               Show more learning cards
             </button>
           )}
-          <div className={styles.catalogueHeading}>
-            <p className={styles.kicker}>2,000-WORD FOUNDATION</p>
-            <h2>Search the complete word catalogue.</h2>
-          </div>
           <div className={styles.libraryTools}>
-            <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search words or meanings" aria-label="Search the word library" />
-            <select value={pack} onChange={(event) => setPack(event.target.value === "all" ? "all" : Number(event.target.value))} aria-label="Filter by pack">
-              <option value="all">All 20 packs</option>
-              {Array.from({ length: 20 }, (_, index) => <option key={index + 1} value={index + 1}>Pack {String(index + 1).padStart(2, "0")}</option>)}
-            </select>
-            <span>{filteredWords.length === 80 ? "First 80 matches" : `${filteredWords.length} matches`}</span>
+            <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Type a word…" aria-label="Search the word library" />
           </div>
           <div className={styles.wordTable}>
             <div className={styles.tableHead}><span>Word</span><span>Meaning</span><span>Pack</span><span>Status</span><span /></div>
