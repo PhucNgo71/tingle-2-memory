@@ -32,7 +32,7 @@ type Progress = Record<string, { cue: string; remembered: boolean }>;
 type View = "learn" | "library" | "games";
 type PairCard = { key: string; wordId: string; kind: "picture" | "word" };
 type TopicId = "all" | "fruit" | "animals" | "food" | "home" | "body" | "people" | "nature" | "school" | "colors" | "numbers";
-type PurchaseFormat = "printed" | "digital";
+type PurchaseFormat = "printed" | "digital" | "color";
 
 const cues: Cue[] = [
   { name: "Orange", color: "#ff7a00", soft: "#fff0df" },
@@ -113,6 +113,68 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
   const [matchedPairIds, setMatchedPairIds] = useState<string[]>([]);
   const [pairAttempts, setPairAttempts] = useState(0);
   const [companionName, setCompanionName] = useState("My Tingle");
+  const [downloadError, setDownloadError] = useState("");
+  const [gameTopic, setGameTopic] = useState<TopicId>("all");
+
+  function playCardPack(topic: TopicId) {
+    setGameTopic(topic);
+    setPairSeed(0);
+    setOpenPairCards([]);
+    setMatchedPairIds([]);
+    setPairAttempts(0);
+    setDotSeed(0);
+    setDotMarks([]);
+    setDotTarget(0);
+    setDotAttempts(0);
+    setDotFeedback(null);
+    setPurchaseOpen(false);
+    setView("games");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  async function downloadCard(card: ArchiveCard) {
+    setDownloadError("");
+    try {
+      const artwork = new window.Image();
+      artwork.src = card.imagePath;
+      await artwork.decode();
+      const canvas = document.createElement("canvas");
+      canvas.width = 1400;
+      canvas.height = 2000;
+      const context = canvas.getContext("2d");
+      if (!context) throw new Error("Canvas unavailable");
+      context.fillStyle = "#fffaf2";
+      context.fillRect(0, 0, 1400, 2000);
+      context.strokeStyle = "#e8dfd2";
+      context.lineWidth = 4;
+      context.strokeRect(60, 60, 1280, 1880);
+      const ratio = Math.min(1120 / artwork.width, 1250 / artwork.height);
+      const width = artwork.width * ratio;
+      const height = artwork.height * ratio;
+      context.filter = "grayscale(1)";
+      context.drawImage(artwork, (1400 - width) / 2, 220 + (1250 - height) / 2, width, height);
+      context.filter = "none";
+      context.textAlign = "center";
+      context.fillStyle = "#292622";
+      context.font = "bold 80px Arial, sans-serif";
+      context.fillText(card.label, 700, 1640, 1160);
+      context.fillStyle = "#ff7a00";
+      context.font = "bold 42px Arial, sans-serif";
+      context.fillText("tingle", 700, 1820);
+      context.fillStyle = "#797269";
+      context.font = "26px Arial, sans-serif";
+      context.fillText("Build offline. Remember online.", 700, 1870);
+      const blob = await new Promise<Blob>((resolve, reject) => canvas.toBlob(value => value ? resolve(value) : reject(new Error("Export failed")), "image/png"));
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `tingle-${card.label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-card.png`;
+      link.click();
+      window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+    } catch {
+      setDownloadError("This card could not download. Please try again.");
+    }
+  }
 
   const selected = words.find((word) => word.wordId === selectedId) ?? initialWord;
   const selectedProgress = progress[selected.wordId];
@@ -253,11 +315,20 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
     ? `${CARD_CHECKOUT_URL}${CARD_CHECKOUT_URL.includes("?") ? "&" : "?"}topic=${encodeURIComponent(activeTopic.id)}&format=${purchaseFormat}&quantity=${purchaseQuantity}`
     : `/?interest=cards&topic=${encodeURIComponent(activeTopic.id)}&format=${purchaseFormat}&quantity=${purchaseQuantity}#early-access`;
 
+  const gamePack = topicCollections.find(topic => topic.id === gameTopic) ?? topicCollections[0];
+  const gameWords = useMemo(() => {
+    if (gameTopic === "all") return illustratedWords;
+    return archiveCards.filter(card => gamePack.terms.includes(normalizeTopicLabel(card.label))).flatMap(card => {
+      const word = (card.wordId ? wordsById.get(card.wordId) : undefined) ?? words.find(item => normalizeTopicLabel(item.headword) === normalizeTopicLabel(card.label));
+      return word ? [{ ...word, thumbnailPath: card.imagePath, imagePath: card.imagePath }] : [];
+    }).filter((word, index, list) => list.findIndex(item => item.wordId === word.wordId) === index);
+  }, [gameTopic, gamePack, illustratedWords, archiveCards, wordsById, words]);
+
   const pairWords = useMemo(() => {
-    if (!illustratedWords.length) return [];
-    const start = (pairSeed * 3) % illustratedWords.length;
-    return Array.from({ length: Math.min(4, illustratedWords.length) }, (_, index) => illustratedWords[(start + index) % illustratedWords.length]);
-  }, [illustratedWords, pairSeed]);
+    if (!gameWords.length) return [];
+    const start = (pairSeed * 3) % gameWords.length;
+    return Array.from({ length: Math.min(4, gameWords.length) }, (_, index) => gameWords[(start + index) % gameWords.length]);
+  }, [gameWords, pairSeed]);
 
   const pairCards = useMemo<PairCard[]>(() => {
     const cards = pairWords.flatMap((word) => [
@@ -305,9 +376,9 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
   }, [selected, words]);
 
   const dotWords = useMemo(() => {
-    const pool = illustratedWords.length >= 30 ? illustratedWords : words;
+    const pool = gameWords;
     return shuffleWithSeed(pool, dotSeed + 731).slice(0, 30);
-  }, [dotSeed, illustratedWords, words]);
+  }, [dotSeed, gameWords]);
 
   const huntTargets = useMemo(() => shuffleWithSeed(dotWords.map((_, index) => index), dotSeed + 913).slice(0, 5), [dotWords, dotSeed]);
 
@@ -549,6 +620,8 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
                 <button type="button" className={styles.buyPackButton} onClick={() => setPurchaseOpen(true)}>
                   Buy {activeTopic.id === "all" ? "the complete collection" : "this card pack"} <span aria-hidden="true">↗</span>
                 </button>
+                <button type="button" className={styles.buyPackButton} onClick={() => { setPurchaseFormat("color"); setPurchaseOpen(true); }}>Pay for color version ↗</button>
+                <button type="button" className={styles.buyPackButton} onClick={() => playCardPack(archiveTopic)}>Play with this pack →</button>
               </div>
             </div>
             <div className={styles.topicRail} aria-label="Card topics">
@@ -593,11 +666,13 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
                       ) : (
                         <span>Topic sketch</span>
                       )}
+                      <button type="button" onClick={() => downloadCard(card)}>Download card ↓</button>
                     </div>
                   </article>
                 );
               })}
             </div>
+            {downloadError && <p role="alert" className={styles.noCards}>{downloadError}</p>}
             {filteredArchiveCards.length === 0 && <p className={styles.noCards}>No cards match this topic and search.</p>}
             {archiveLimit < filteredArchiveCards.length && (
               <button type="button" className={styles.showMoreArchive} onClick={() => setArchiveLimit(archiveLimit + 48)}>
@@ -617,6 +692,7 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
                 <p className={styles.purchaseLead}>Choose how you want to learn with your Tingle cards. Your selected pack contains {topicCounts.get(activeTopic.id)} sketch cards.</p>
 
                 <div className={styles.purchaseFormats} aria-label="Card format">
+                  <button type="button" className={purchaseFormat === "color" ? styles.selectedPurchaseFormat : ""} aria-pressed={purchaseFormat === "color"} onClick={() => setPurchaseFormat("color")}><span aria-hidden="true">◉</span><strong>Color version</strong><small>Full-color downloadable card pack</small></button>
                   <button
                     type="button"
                     className={purchaseFormat === "printed" ? styles.selectedPurchaseFormat : ""}
@@ -651,6 +727,7 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
                 <a className={styles.checkoutButton} href={purchaseUrl}>
                   {CARD_CHECKOUT_URL ? "Continue to secure checkout" : "Reserve this card pack"} <span aria-hidden="true">→</span>
                 </a>
+                <button type="button" className={styles.buyPackButton} onClick={() => playCardPack(archiveTopic)}>Preview games with this pack →</button>
                 <p className={styles.checkoutNote}>
                   {CARD_CHECKOUT_URL
                     ? "You will continue to Tingle’s secure payment page."
@@ -664,6 +741,8 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
 
       {view === "games" && (
         <section className={styles.gamesView}>
+          <div className={styles.archiveTools}><label htmlFor="game-pack">Play with card pack</label><select id="game-pack" value={gameTopic} onChange={event => playCardPack(event.target.value as TopicId)}>{topicCollections.map(topic => <option key={topic.id} value={topic.id}>{topic.label}</option>)}</select><span>{gameWords.length} playable cards</span></div>
+          {gameWords.length === 0 && <p role="status">This pack has no linked learning cards yet. Choose another pack to play.</p>}
           <div className={styles.viewIntro}>
             <div><p className={styles.kicker}>TINGLE RECALL GAMES</p><h1>Play to remember.</h1></div>
             <p>Practice retrieval through short, tactile card games. Pair each sketch with its word, then mark the correct word from each clue.</p>
