@@ -436,6 +436,7 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
             </span>
             <span><b>{companionName || "My Tingle"}</b>{rememberedCount} remembered</span>
           </div>
+          <Link href="/games">20-game starter ↗</Link>
           <Link href="/">About Tingle ↗</Link>
         </div>
       </header>

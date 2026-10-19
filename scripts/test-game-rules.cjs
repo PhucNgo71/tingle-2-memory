@@ -1,0 +1,22 @@
+const fs = require('node:fs');
+const vm = require('node:vm');
+const assert = require('node:assert/strict');
+const ts = require('typescript');
+const path = require('node:path');
+const file = path.resolve(__dirname, '../app/games/levelRules.ts');
+const result = ts.transpileModule(fs.readFileSync(file, 'utf8'), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020 } });
+const context = { exports: {} }; vm.runInNewContext(result.outputText, context);
+const { DAY, emptyProgress, qualifies, completeLevel, finishReview, parseProgress } = context.exports;
+let tests = 0;
+function test(name, fn) { fn(); tests++; console.log('PASS ' + name); }
+const now = 1_800_000_000_000;
+test('mixed check needs 11 of 12', () => { assert.equal(qualifies(10,12),false); assert.equal(qualifies(11,12),true); assert.equal(qualifies(0,0),false); });
+test('completion schedules next day, not mastery', () => { const p=completeLevel(now); assert.equal(p.nextReviewAt,now+DAY); assert.equal(p.mastered,false); });
+test('early review cannot advance progress', () => { const p=completeLevel(now); assert.equal(finishReview(p,6,6,now),p); });
+test('failed review is rescheduled, not passed', () => { const p=finishReview(completeLevel(now),5,6,now+DAY); assert.equal(p.reviewPassed,0); assert.equal(p.nextReviewAt,now+2*DAY); });
+test('three spaced reviews required', () => { let p=completeLevel(now); p=finishReview(p,6,6,now+DAY); assert.equal(p.nextReviewAt,now+3*DAY); p=finishReview(p,6,6,now+3*DAY); assert.equal(p.nextReviewAt,now+7*DAY); assert.equal(p.mastered,false); p=finishReview(p,6,6,now+7*DAY); assert.equal(p.mastered,true); assert.equal(p.nextReviewAt,null); });
+test('late reviews cannot all pass on one day', () => { const p=finishReview(completeLevel(now),6,6,now+20*DAY); assert.equal(p.nextReviewAt,now+21*DAY); assert.equal(finishReview(p,6,6,now+20*DAY),p); });
+test('stored progress round trips', () => { const p=completeLevel(now); assert.equal(JSON.stringify(parseProgress(JSON.stringify(p))),JSON.stringify(p)); });
+test('malformed progress resets safely', () => { for(const value of ['bad','null','{}','{"version":1,"completedAt":3,"mastered":true,"reviewPassed":0,"nextReviewAt":null}']) assert.equal(JSON.stringify(parseProgress(value)),JSON.stringify(emptyProgress())); });
+test('all six starter assets exist', () => { for (const word of ['apple','banana','pear','grape','lemon','strawberry']) assert.ok(fs.statSync(path.resolve(__dirname,`../public/game-sketches/${word}-pencil-draft-v1.png`)).size>0); });
+console.log(`${tests} checks passed.`);

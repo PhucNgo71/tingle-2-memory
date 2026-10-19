@@ -1,0 +1,27 @@
+const fs = require('node:fs');
+const vm = require('node:vm');
+const assert = require('node:assert/strict');
+const ts = require('typescript');
+const React = require('react');
+const { renderToStaticMarkup } = require('react-dom/server');
+const path = require('node:path');
+const source = fs.readFileSync(path.resolve(__dirname,'../app/games/localization.tsx'),'utf8');
+const output = ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2020,jsx:ts.JsxEmit.ReactJSX}}).outputText;
+const sandbox={exports:{},require};vm.runInNewContext(output,sandbox);
+const {translate,localizeTree,japanese,korean,cueColorLabel}=sandbox.exports;
+let count=0;function test(name,fn){fn();count++;console.log('PASS '+name);}
+test('Japanese game label',()=>assert.equal(translate('Picture Pick','ja'),'単語に合う絵を選ぼう'));
+test('English interface is unchanged',()=>assert.equal(translate('Picture Pick','en'),'Picture Pick'));
+test('English answer words unchanged',()=>['apple','banana','pear','grape','lemon','strawberry'].forEach(word=>assert.equal(translate(word,'ja'),word)));
+test('dynamic feedback retains English answer',()=>assert.ok(translate('The answer was apple. This counts as a missed question.','ja').includes('apple')));
+test('English exercise sentence unchanged',()=>assert.equal(translate('I bite into a crunchy ___.','ja'),'I bite into a crunchy ___.'));
+test('color option keeps English storage value',()=>{const html=renderToStaticMarkup(localizeTree(React.createElement('option',null,'blue'),'ja'));assert.ok(html.includes('value="blue"'));assert.ok(html.includes('青'));});
+test('fragment children and accessibility labels localized',()=>{const element=React.createElement('section',{'aria-label':'Guided fruit level'},React.createElement(React.Fragment,null,React.createElement('button',null,'Finish')));const html=renderToStaticMarkup(localizeTree(element,'ja'));assert.ok(html.includes('くだもののレベル学習'));assert.ok(html.includes('終了する'));});
+test('explicit English learning content preserved',()=>{const element=React.createElement('p',{lang:'en'},'Fruit');const html=renderToStaticMarkup(localizeTree(element,'ja'));assert.ok(html.includes('Fruit'));});
+test('all 20 game names are translated',()=>{const names=['Picture Pick','Listen & Find','Pair Match','Memory Flip','Dot Bingo','Missing Letter','Letter Scramble','First Sound','Topic Basket','Odd One Out','Word Pick','Build & Check','What Disappeared?','Sketch Peek','Color Clue','Cue & Picture','Meaning Match','Sentence Gap','Word Trail','My Review Mix'];names.forEach(name=>assert.ok(japanese[name]));});
+test('Korean has every Japanese interface key',()=>{for(const key of Object.keys(japanese))assert.ok(korean[key],`Missing Korean: ${key}`);});
+test('Korean leaves English answers and exercise sentences unchanged',()=>{for(const value of ['apple','banana','pear','grape','lemon','strawberry','I bite into a crunchy ___.'])assert.equal(translate(value,'ko'),value);});
+test('Korean dynamic feedback retains English answer',()=>{assert.ok(translate('The answer was apple. This counts as a missed question.','ko').includes('apple'));assert.ok(translate('Practice: 4/6 words recalled first-try in both activities','ko').includes('4/6'));});
+test('Korean color option preserves storage value',()=>{const html=renderToStaticMarkup(localizeTree(React.createElement('option',null,'blue'),'ko'));assert.ok(html.includes('value="blue"'));assert.ok(html.includes('파랑'));assert.equal(cueColorLabel('blue','ko'),'파랑');});
+test('Korean fragment and accessibility labels',()=>{const element=React.createElement('section',{'aria-label':'Guided fruit level'},React.createElement(React.Fragment,null,React.createElement('button',null,'Finish')));const html=renderToStaticMarkup(localizeTree(element,'ko'));assert.ok(html.includes('과일 단계별 학습'));assert.ok(html.includes('마치기'));});
+console.log(`${count} localization checks passed.`);
