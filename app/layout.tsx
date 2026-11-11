@@ -10,9 +10,9 @@ const nunito = Nunito({
 });
 
 export const metadata: Metadata = {
-  title: "Tingle — Build it. Scan it. Remember it.",
+  title: "Tingle — Discover it. Play it. Remember it.",
   description:
-    "Build words with safe magnetic wooden blocks, scan the arranged letters, and remember them with online sketch cards and personal color cues.",
+    "Learn English in your browser with sketch cards, short vocabulary games, and daily recall.",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

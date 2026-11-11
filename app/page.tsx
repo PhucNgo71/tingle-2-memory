@@ -6,17 +6,17 @@ import { FormEvent, useState } from "react";
 
 const steps = [
   ["01", "Build word", "Arrange safe magnetic wooden letters on the Tingle board."],
-  ["02", "Scan letters", "Use the app to recognize the arranged letters—not a drawing."],
+  ["02", "Find the word", "Search for the word on Tingle Web."],
   ["03", "Hear it", "Listen to clear pronunciation and connect sound with spelling."],
   ["04", "Open card", "Unlock the online sketch card with meaning and examples."],
-  ["05", "Choose color", "Pick the quiet in-app color cue that feels easiest to remember."],
+  ["05", "Choose color", "Pick the quiet personal color cue that feels easiest to remember."],
   ["06", "Review", "Simple recall games bring the word back at the right moment."],
 ];
 
 const ecosystem = [
   ["01", "Tingle Learning Box", "An organized physical kit keeps the word board, safe wooden letters, memory cards, and storage together.", "Build"],
-  ["02", "Letter scan", "The app recognizes the arranged wooden letters and opens the learning flow.", "Scan"],
-  ["03", "Online memory cards", "Sketch, pronunciation, meaning, and examples come together; color is chosen in the app.", "Choose"],
+  ["02", "Daily journey", "Discover words, play recall games, and see what to practice next.", "Play"],
+  ["03", "Online memory cards", "Sketch, pronunciation, meaning, and examples come together; choose a color cue online.", "Choose"],
   ["04", "Recall games", "Simple, low-pressure reviews turn recognition into recall without overbuilding the experience.", "Remember"],
 ];
 
@@ -52,7 +52,7 @@ export default function Home() {
             <a className="nav-link" href="#ecosystem">Ecosystem</a>
             <Link className="nav-link" href="/learn">Tingle Web</Link>
           </nav>
-          <Link className="button button-small" href="/learn">Open Tingle Web <span aria-hidden="true">↗</span></Link>
+          <Link className="button button-small" href="/games">Play now <span aria-hidden="true">↗</span></Link>
         </div>
       </header>
 
@@ -62,13 +62,13 @@ export default function Home() {
           <div className="hero-copy relative z-10 max-w-[650px]">
             <p className="eyebrow"><span className="eyebrow-dot" /> AI visual memory learning</p>
             <h1 className="mt-7 font-serif text-[clamp(4rem,6.8vw,6.9rem)] font-normal leading-[0.86] tracking-[-0.07em]">
-              Build it.<br />Scan it.<br /><em className="relative not-italic text-tingle-orange">Remember it.<span className="sketch-underline" aria-hidden="true" /></em>
+              Discover it.<br />Play it.<br /><em className="relative not-italic text-tingle-orange">Remember it.<span className="sketch-underline" aria-hidden="true" /></em>
             </h1>
             <p className="mt-9 max-w-[560px] text-lg leading-8 text-tingle-muted sm:text-xl">
-              Build English words with safe magnetic wooden blocks. Scan the arranged letters in the app, hear the word, open its sketch memory card, and choose a personal color cue.
+              Discover English words through sketches and sound, play short games, and revisit the words you’re learning. Play right in your browser.
             </p>
             <div className="mt-10 flex flex-wrap items-center gap-4">
-              <Link className="button" href="/learn">Try the web experience <span aria-hidden="true">→</span></Link>
+              <Link className="button" href="/games">Play now <span aria-hidden="true">→</span></Link>
               <a className="text-link" href="#early-access">Join early access <span aria-hidden="true">↓</span></a>
             </div>
             <p className="mt-8 flex items-center gap-3 text-sm font-semibold text-tingle-muted"><span className="tiny-mark">CUE</span> One color. One personal connection. Another way back to the word.</p>
@@ -81,10 +81,10 @@ export default function Home() {
             <div className="hero-image-wrap">
               <Image src="/tingle-learning-box-v1.png" alt="An open natural wooden Tingle Learning Box with alphabet blocks, a two-rail word board, memory cards, and a storage pouch" width={1536} height={1024} priority sizes="(max-width: 1024px) 100vw, 58vw" className="h-auto w-full" />
             </div>
-            <div className="hero-flow" aria-label="Build, scan, and remember">
+            <div className="hero-flow" aria-label="Discover, play, and remember">
               <div className="hero-flow-line" aria-hidden="true"><i /></div>
               <span><b>01</b> Build</span>
-              <span><b>02</b> Scan letters</span>
+              <span><b>02</b> Play online</span>
               <span><b>03</b> Remember</span>
             </div>
           </div>
@@ -101,7 +101,7 @@ export default function Home() {
       <section id="how" className="section-shell">
         <div className="section-heading">
           <div><p className="section-number">01 / HOW IT WORKS</p><h2>From building to <em>lasting recall.</em></h2></div>
-          <p>One focused flow connects physical word building, letter recognition, pronunciation, visual memory, color choice, and recall.</p>
+          <p>One focused flow connects physical word building, pronunciation, visual memory, color choice, and recall.</p>
         </div>
         <div className="mt-14 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
           {steps.map(([number, title, body], index) => (
@@ -151,7 +151,7 @@ export default function Home() {
       <section className="section-shell">
         <div className="section-heading">
           <div><p className="section-number">03 / PERSONAL MEMORY</p><h2>Choose your <em>memory cue.</em></h2></div>
-          <p>The word stays the same. The cue changes with the learner. Choose from seven color cues in the app and find the quiet signal that feels personally recognizable.</p>
+          <p>The word stays the same. The cue changes with the learner. Choose from seven color cues on Tingle Web and find the quiet signal that feels personally recognizable.</p>
         </div>
         <div className="cue-stage mt-14">
           <div className="cue-card" style={{ "--cue": cue.color, "--cue-soft": cue.soft } as React.CSSProperties}>
@@ -194,9 +194,9 @@ export default function Home() {
           <div className="max-w-xl">
             <p className="section-number">05 / TINGLE LEARNING BOX</p>
             <h2 className="mt-5 font-serif text-[clamp(3rem,5vw,5.2rem)] leading-[0.95] tracking-[-0.05em]">Everything together.<br /><em>Ready to remember.</em></h2>
-            <p className="mt-7 text-lg leading-8 text-tingle-muted">The Tingle Learning Box organizes the complete physical experience: rounded wooden letters, a two-rail word board, sketch memory cards, and simple storage. Build the word by hand, then scan the arranged letters to continue in the app.</p>
+            <p className="mt-7 text-lg leading-8 text-tingle-muted">The Tingle Learning Box organizes the complete physical experience: rounded wooden letters, a two-rail word board, sketch memory cards, and simple storage. Build the word by hand, then find it on Tingle Web.</p>
             <ul className="mt-8 grid gap-3 sm:grid-cols-2">
-              {["Organized alphabet library", "Safe, rounded natural wood", "Two-rail word board", "Built for app letter scanning"].map(item => <li className="check-item" key={item}><span>✓</span>{item}</li>)}
+              {["Organized alphabet library", "Safe, rounded natural wood", "Two-rail word board", "Optional hands-on play"].map(item => <li className="check-item" key={item}><span>✓</span>{item}</li>)}
             </ul>
           </div>
           <div className="learning-box-visual">
@@ -234,7 +234,7 @@ export default function Home() {
             <div className="printed-pack-copy">
               <p className="section-number">PRINTED CARD PACKAGE</p>
               <h3 id="printed-pack-title">A tactile card pack for every topic.</h3>
-              <p>Each reusable pack brings Tingle&apos;s calm sketch cards into hands-on learning. Learners see the picture, say the word, build it with wooden letters, then choose the same personal color cue in the app.</p>
+              <p>Each reusable pack brings Tingle&apos;s calm sketch cards into hands-on learning. Learners see the picture, say the word, build it with wooden letters, then choose the same personal color cue on Tingle Web.</p>
               <div className="printed-spec-grid">
                 <div><strong>24</strong><span>curated cards per topic</span></div>
                 <div><strong>70 × 100 mm</strong><span>comfortable child-friendly size</span></div>
@@ -253,7 +253,7 @@ export default function Home() {
           <div className="kit-details" aria-label="What comes in the physical Tingle kit">
             {[
               ["01", "Organized wooden box", "Dedicated compartments keep the alphabet, board, cards, and pouch ready for the next learning session."],
-              ["02", "Two-rail word board", "The removable board keeps arranged letters clear, aligned, and easy for the app to recognize."],
+              ["02", "Two-rail word board", "The removable board keeps arranged letters clear, aligned, and easy to read."],
               ["03", "Rounded wooden blocks", "Safe, tactile letter pieces add a personal cue-color accent without losing the warmth of natural wood."],
               ["04", "Sketch memory cards", "Calm cards connect the completed word with pronunciation, meaning, an example, and seven cue choices."],
             ].map(([number, title, body]) => (
@@ -272,9 +272,9 @@ export default function Home() {
           <div>
             <span className="coming-pill">COMING NEXT · PHASE 2</span>
             <h2 className="mt-7 font-serif text-[clamp(3rem,5.4vw,5.6rem)] leading-[0.95] tracking-[-0.05em]">Draw Your Own<br /><em>belongs to Phase 2.</em></h2>
-            <p className="mt-7 max-w-xl text-lg leading-8 text-tingle-muted">Drawing is not a Phase 1 feature. Coming next: learners will scan their own drawings, use AI sketch cleanup, and bring those drawings to life with animation. Phase 1 scans arranged letters only.</p>
+            <p className="mt-7 max-w-xl text-lg leading-8 text-tingle-muted">Drawing is not a Phase 1 feature. Coming next: learners will scan their own drawings, use AI sketch cleanup, and bring those drawings to life with animation.</p>
           </div>
-          <div className="phase-divider"><span className="phase active"><b>Phase 1</b> Build · scan letters · remember</span><span className="phase-line" /><span className="phase"><b>Phase 2</b> Draw · clean · animate</span><span className="phase-line" /><span className="phase"><b>Phase 3</b> Tingle Friend · learn together</span></div>
+          <div className="phase-divider"><span className="phase active"><b>Phase 1</b> Discover · play · remember</span><span className="phase-line" /><span className="phase"><b>Phase 2</b> Draw · clean · animate</span><span className="phase-line" /><span className="phase"><b>Phase 3</b> Tingle Friend · learn together</span></div>
         </div>
       </section>
 
@@ -323,7 +323,7 @@ export default function Home() {
       </section>
 
       <footer className="mx-auto flex max-w-[1240px] flex-col justify-between gap-8 px-5 py-10 text-sm text-tingle-muted sm:px-8 md:flex-row md:items-end">
-        <div><a href="#top" className="brand-logo" aria-label="Tingle home"><Image src="/tingle-wordmark-spark-v3.png" alt="Tingle" width={1774} height={887} className="brand-logo-image" /></a><p className="mt-3">Build it. Scan it. Remember it.</p></div>
+        <div><a href="#top" className="brand-logo" aria-label="Tingle home"><Image src="/tingle-wordmark-spark-v3.png" alt="Tingle" width={1774} height={887} className="brand-logo-image" /></a><p className="mt-3">Discover it. Play it. Remember it.</p></div>
         <div className="flex flex-wrap gap-x-8 gap-y-3"><a className="nav-link" href="#how">How it works</a><a className="nav-link" href="#color">Why color</a><Link className="nav-link" href="/learn">Tingle Web</Link><a className="nav-link" href="#early-access">Early access</a></div>
         <p>© {new Date().getFullYear()} Tingle. Learning, made memorable.</p>
       </footer>
