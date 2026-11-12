@@ -483,7 +483,7 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
             </div>
 
             <article className={`${styles.memoryCard} ${selected.imagePath ? styles.hasArtwork : ""}`}>
-              <span className={styles.cueBadge}>{cue.name} cue</span>
+              <span key={cue.name} className={styles.cueBadge}>{cue.name} cue</span>
               {!cardFlipped ? (
                 <div className={styles.flashcardPanel} key={`front-${selected.wordId}`} aria-live="polite">
                   {selected.imagePath ? (

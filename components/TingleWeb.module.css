@@ -399,4 +399,44 @@
   .bingoBoard { gap: .4rem; padding: .55rem; }
   .bingoBoard button { min-height: 100px; }
 }
-@media (prefers-reduced-motion:reduce) { .shell * { scroll-behavior: auto !important; transition: none !important; animation: none !important; } }
+.memoryCard::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(ellipse at 85% 0%, color-mix(in srgb, var(--cue) 16%, transparent), transparent 57%);
+}
+.flashcardPanel { animation: cardFaceIn 480ms cubic-bezier(.2,.75,.25,1) both; }
+.flashcardAnswer h2 { animation: answerLift 420ms 110ms cubic-bezier(.2,.8,.25,1) both; }
+.flashcardAnswer > p:not(.kicker) { animation: answerLift 420ms 175ms ease-out both; }
+.cueBadge { animation: cuePop 540ms cubic-bezier(.2,.75,.25,1) both; }
+.sketchImage { animation-iteration-count: 2; }
+.cueDots .activeCue { animation-iteration-count: 2; }
+.flashcardPrompt button:active, .archiveMeta button:active { transform: scale(.96); }
+.archiveArtwork::before {
+  content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: linear-gradient(115deg, transparent 30%, rgba(255,253,249,.62) 50%, transparent 70%);
+  transform: translateX(-105%); transition: transform 620ms ease;
+}
+.archiveArtwork::after { z-index: 2; }
+.archiveCard:focus-within { box-shadow: 0 0 0 2px var(--card-cue), 0 16px 32px rgba(66,49,26,.1); }
+.archiveCard:focus-within .archiveArtwork::before { transform: translateX(105%); }
+@media (hover:hover) and (pointer:fine) {
+  .archiveCard:hover .archiveArtwork::before { transform: translateX(105%); }
+  .archiveCard:hover .archiveArtwork img { transform: scale(1.07) rotate(-1.5deg); }
+}
+@keyframes cardFaceIn {
+  from { opacity: .25; transform: perspective(900px) rotateY(-22deg) translateY(8px); }
+  to { opacity: 1; transform: perspective(900px) rotateY(0) translateY(0); }
+}
+@keyframes answerLift {
+  from { opacity: 0; transform: translateY(12px) scale(.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes cuePop {
+  from { transform: scale(.92); box-shadow: 0 0 0 0 color-mix(in srgb,var(--cue) 40%,transparent); }
+  45% { transform: scale(1.07); }
+  to { transform: scale(1); box-shadow: 0 0 0 12px transparent; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .shell *, .shell *::before, .shell *::after { scroll-behavior: auto !important; transition: none !important; animation: none !important; }
+  .memoryCard:hover, .archiveCard:hover, .archiveCard:hover .archiveArtwork img, .flashcardPrompt button:hover, .flashcardPrompt button:hover span, .flashcardPrompt button:active, .archiveMeta button:active { transform: none; }
+  .archiveArtwork::before { display: none; }
+}
