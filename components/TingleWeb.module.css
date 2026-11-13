@@ -440,3 +440,18 @@
   .memoryCard:hover, .archiveCard:hover, .archiveCard:hover .archiveArtwork img, .flashcardPrompt button:hover, .flashcardPrompt button:hover span, .flashcardPrompt button:active, .archiveMeta button:active { transform: none; }
   .archiveArtwork::before { display: none; }
 }
+.focusLearn { width: min(100%, 820px); margin: 0 auto; padding: clamp(1rem, 4vw, 3rem) clamp(1rem, 3vw, 1.5rem); }
+.focusLearn .learningStage { padding: 0; min-width: 0; }
+.focusIntro { margin-bottom: 1rem; }
+.focusIntro h1 { font-size: clamp(2.1rem, 6vw, 4rem); font-weight: 850; line-height: 1.05; letter-spacing: -.045em; margin-top: .45rem; }
+.focusIntro ol { display: flex; flex-wrap: wrap; gap: .45rem; margin-top: 1rem; padding: 0; list-style: none; }
+.focusIntro li { border: 1px solid #e7ded0; border-radius: 999px; padding: .4rem .65rem; font-size: .78rem; }
+.focusIntro li[aria-current="step"] { background: var(--cue-soft); color: #292622; border-color: var(--cue); font-weight: 800; }
+.learnDisclosure { margin: .8rem 0; border: 1px solid #e7ded0; border-radius: 1rem; background: #fffdf8; padding: .65rem .95rem; }
+.learnDisclosure summary { cursor: pointer; font-weight: 800; padding-block: .25rem; }
+.learnDisclosure .sideSearch { margin-top: .75rem; }
+.focusLearn .memoryCard { min-height: 0; }
+.focusLearn .sketchImageWrap, .focusLearn .sketchPlaceholder { min-height: clamp(190px, 39vw, 330px); }
+.focusLearn .sketchImage { max-height: 310px; }
+.focusLearn .flashcardPrompt { flex-wrap: wrap; gap: .75rem; }
+.focusLearn .flashcardAnswer h2 { overflow-wrap: anywhere; font-size: clamp(3.25rem, 10vw, 7rem); }

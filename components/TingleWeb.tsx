@@ -442,20 +442,19 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
       </header>
 
       {view === "learn" && (
-        <div className={styles.learnLayout}>
-          <aside className={styles.sidebar}>
-            <div>
-              <p className={styles.kicker}>TODAY&apos;S WORD</p>
-              <h1>{selected.headword}</h1>
-              <p className={styles.definition}>{selected.definition}</p>
-            </div>
-            <button type="button" className={styles.speakButton} onClick={speakWord}>
-              <span aria-hidden="true">◖</span> Hear pronunciation
-            </button>
-            <div className={styles.metaGrid}>
-              <div><span>Library rank</span><strong>#{selected.rank}</strong></div>
-              <div><span>Learning pack</span><strong>{String(selected.pack).padStart(2, "0")}</strong></div>
-            </div>
+        <div className={styles.focusLearn}>
+          <section className={styles.learningStage}>
+            <header className={styles.focusIntro}>
+              <p className={styles.kicker}>TINGLE LEARN</p>
+              <h1>One word at a time.</h1>
+              <ol aria-label="Learning steps">
+                <li aria-current={!cardFlipped ? "step" : undefined}>1 · Look</li>
+                <li aria-current={cardFlipped ? "step" : undefined}>2 · Reveal &amp; listen</li>
+                <li>3 · Practice</li>
+              </ol>
+            </header>
+            <details className={styles.learnDisclosure}>
+              <summary>Find a word</summary>
             <div className={styles.sideSearch}>
               <label htmlFor="quick-word">Find another word</label>
               <input id="quick-word" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Try “memory”" />
@@ -463,24 +462,13 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
                 <div className={styles.quickResults}>
                   {filteredWords.slice(0, 5).map((word) => (
                     <button type="button" key={word.wordId} onClick={() => { setSelectedId(word.wordId); setQuery(""); }}>
-                      <span>{word.headword}</span><small>#{word.rank}</small>
+                      <span>{word.headword}</span>
                     </button>
                   ))}
                 </div>
               )}
             </div>
-          </aside>
-
-          <section className={styles.learningStage}>
-            <div className={styles.cardHeader}>
-              <div><p className={styles.kicker}>DEMO FLASHCARD / {selected.wordId}</p><p>Picture first. Answer second. Recall before you flip.</p></div>
-              <div className={styles.cardActions}>
-                <span className={styles.demoPill}>Interactive demo</span>
-                <button type="button" className={selectedProgress?.remembered ? styles.remembered : styles.rememberButton} onClick={toggleRemembered}>
-                  {selectedProgress?.remembered ? "✓ Remembered" : "+ Mark remembered"}
-                </button>
-              </div>
-            </div>
+            </details>
 
             <article className={`${styles.memoryCard} ${selected.imagePath ? styles.hasArtwork : ""}`}>
               <span key={cue.name} className={styles.cueBadge}>{cue.name} cue</span>
@@ -490,7 +478,7 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
                     <div className={styles.sketchImageWrap}>
                       <Image
                         src={selected.imagePath}
-                        alt={selected.imageAlt ?? `Tingle memory sketch for ${selected.headword}`}
+                        alt="Illustration clue. Reveal the answer to hear the word."
                         width={1600}
                         height={1200}
                         sizes="(max-width: 900px) 90vw, 720px"
@@ -505,7 +493,7 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
                     </div>
                   )}
                   <div className={styles.flashcardPrompt}>
-                    <div><span>LOOK &amp; RECALL</span><strong>What word is this?</strong></div>
+                    <div><span>LOOK &amp; RECALL</span><strong>{selected.imagePath ? "What word is this?" : "Can you guess the word?"}</strong></div>
                     <button type="button" onClick={() => setCardFlipped(true)}>Reveal answer <span aria-hidden="true">↻</span></button>
                   </div>
                 </div>
@@ -516,16 +504,21 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
                     <h2>{selected.headword}</h2>
                     <p>{selected.definition}</p>
                     <button type="button" onClick={speakWord} aria-label={`Hear the pronunciation of ${selected.headword}`}><span aria-hidden="true">▶</span> Hear pronunciation</button>
-                    <small><i style={{ backgroundColor: cue.color }} /> Your saved cue is {cue.name.toLowerCase()}.</small>
+                    {selectedProgress && <small><i style={{ backgroundColor: cue.color }} /> Your saved cue is {cue.name.toLowerCase()}.</small>}
                   </div>
                   <div className={styles.flashcardPrompt}>
                     <div><span>ANSWER SIDE</span><strong>Did you remember it?</strong></div>
                     <button type="button" onClick={() => setCardFlipped(false)}>Show picture <span aria-hidden="true">↻</span></button>
+                    <button type="button" aria-pressed={Boolean(selectedProgress?.remembered)} onClick={toggleRemembered}>
+                      {selectedProgress?.remembered ? "✓ Remembered" : "I remembered it"}
+                    </button>
                   </div>
                 </div>
               )}
             </article>
 
+            <details className={styles.learnDisclosure}>
+              <summary>Choose a memory color</summary>
             <div className={styles.cuePicker}>
               <div><p className={styles.kicker}>CHOOSE YOUR MEMORY CUE</p><span>Use the same color when this word returns.</span></div>
               <div className={styles.cueDots}>
@@ -542,7 +535,10 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
                 ))}
               </div>
             </div>
+            </details>
 
+            {cardFlipped && <details className={styles.learnDisclosure}>
+              <summary>Practice this word</summary>
             <div className={styles.practiceGrid}>
               <article className={styles.practiceCard}>
                 <p className={styles.kicker}>BUILD THE WORD</p>
@@ -599,6 +595,7 @@ export default function TingleWeb({ words, archiveCards }: { words: TingleWord[]
                 </div>
               </article>
             </div>
+            </details>}
           </section>
         </div>
       )}
