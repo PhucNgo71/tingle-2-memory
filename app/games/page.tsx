@@ -170,7 +170,8 @@ export default function GamesPage() {
         {checkpoint === games.length && <h3>Adventure complete! You finished all {games.length} games.</h3>}
       </>}
     </section>
-    {!adventure && <nav aria-label="Choose a game" className={styles.tabs}>{games.map(name => <button key={name} aria-pressed={game === name} onClick={() => restart(name)}>{name}</button>)}</nav>}
+    {!adventure && <nav aria-label="Choose a game" className={`${styles.tabs} ${styles.gameMenu}`}>{games.map((name, index) => <button key={name} style={{ "--game-delay": `${index * 18}ms` } as CSSProperties} aria-pressed={game === name} onClick={() => restart(name)}><span>{name}</span></button>)}</nav>}
+    <div key={game} className={styles.gameEntrance}>
     {adventure && checkpoint === games.length ? null : moreGames.includes(game) ? <MoreGames key={game} game={game} locale={locale} onComplete={finishStage} /> : challengeNames.includes(game) ? <StarterChallenges key={game} game={game} locale={locale} onComplete={finishStage} /> : <section className={styles.play} aria-label={game}>
       <header><div><h2>{game}</h2><p>{pairing ? "Match each sketch with its word. Different pairs stay visible until your next choice." : game === "Picture Pick" ? "Choose the sketch for this word." : game === "Dot Bingo" ? "Listen, then mark the correct word. Complete a row of three." : "Listen, then choose the matching sketch."}</p></div><button onClick={() => restart()}>New round ↻</button></header>
       {!pairing && <div className={styles.prompt}>{game === "Picture Pick" ? <h2>{done ? "Well done!" : target}</h2> : <button disabled={done} onClick={speak}>▶ Hear the word</button>}<span>{done ? "Round complete" : `${round + 1} / ${words.length}`}</span></div>}
@@ -180,6 +181,7 @@ export default function GamesPage() {
         return <button className={styles.card} key={card.id} disabled={matched.includes(card.word) || done} aria-label={visible ? `${card.picture ? "Sketch" : "Word"}: ${card.word}` : "Turn over a hidden card"} onClick={() => flip(card.id)} aria-pressed={selected.includes(card.id)}>{visible ? card.picture ? <img src={`/game-sketches/${card.word}-pencil-draft-v1.png`} alt={card.word} /> : card.word : "?"}{matched.includes(card.word) && <span>✓</span>}</button>;
       }) : (game === "Dot Bingo" ? board : order).map(word => <button className={styles.card} key={word} disabled={done || marks.includes(word)} onClick={() => choose(word)} aria-label={word}>{game === "Dot Bingo" ? <>{word}<span className={styles.dot}>{marks.includes(word) ? "●" : "○"}</span></> : <img src={`/game-sketches/${word}-pencil-draft-v1.png`} alt={word} />}</button>)}</div>
     </section>}
+    </div>
     {adventure && checkpoint > stage && checkpoint < games.length && <div className={styles.tabs}><button onClick={() => restart(games[checkpoint])}>Next stage →</button></div>}
     {!adventure && <GuidedLevel locale={locale} />}
     <p>20 learning quests in the Fruit Starter adventure. English pronunciation uses your browser’s voices. Adventure checkpoints are saved on this browser.</p>
