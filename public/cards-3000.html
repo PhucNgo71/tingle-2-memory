@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="vi">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tingle · 3.000 thẻ tiếng Anh</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#fbf6ed;color:#292520;font:16px/1.55 system-ui,sans-serif}main{max-width:1040px;margin:auto;padding:28px 18px 60px}a{color:#8b3e00}h1{font-size:clamp(32px,6vw,56px);line-height:1.1;margin:18px 0}p{margin:10px 0 18px}.tools,.pages,.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}button,select,input{font:inherit;color:inherit;background:white;border:1px solid #d9cdbd;border-radius:12px;padding:9px 13px}button{cursor:pointer}button:disabled{opacity:.45;cursor:default}button[aria-pressed=true]{background:#ffe2bd;border-color:#a65b16}input{flex:1;min-width:180px}#cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:14px;margin:18px 0}article{background:white;border:1px solid #eee1d1;border-radius:20px;padding:18px;min-width:0}h2{margin:6px 0;overflow-wrap:anywhere}small{color:#665c50}.image{width:100%;height:145px;object-fit:contain;filter:grayscale(1)}.draft{color:#665c50}.pages{justify-content:center}
+</style>
+<main>
+<a href="/learn">← Tingle Learn</a>
+<h1>3.000 thẻ tiếng Anh</h1>
+<p>Bản học thử · Tìm theo từ hoặc chủ đề. Một số thẻ đang chờ bổ sung nghĩa, ví dụ hoặc hình minh họa.</p>
+<div class="tools">
+<input id="search" type="search" aria-label="Tìm từ tiếng Anh" placeholder="Tìm từ, ví dụ: apple">
+<select id="topic" aria-label="Chủ đề"><option value="">Tất cả chủ đề</option></select>
+<label><input id="unlearned" type="checkbox"> Chưa đánh dấu</label>
+</div>
+<p id="status" role="status">Đang tải bộ thẻ…</p>
+<div id="cards"></div>
+<nav class="pages" aria-label="Phân trang"><button id="prev">← Trang trước</button><span id="page"></span><button id="next">Trang sau →</button></nav>
+<p><small>Đánh dấu đã nhớ chỉ lưu trên trình duyệt này. Phát âm dùng giọng tiếng Anh của thiết bị.</small></p>
+</main>
+<script>
+const $=id=>document.getElementById(id), size=24, key='tingle-cards-3000-remembered-v1';
+let rows=[],page=0,remembered=new Set();
+try{remembered=new Set(JSON.parse(localStorage.getItem(key)||'[]'))}catch{}
+const make=(tag,value)=>{const el=document.createElement(tag);if(value!==undefined)el.textContent=value;return el};
+function render(){
+  const query=$('search').value.trim().toLowerCase(), topic=$('topic').value;
+  const filtered=rows.filter(c=>(!topic||c.topic===topic)&&(!query||c.word.toLowerCase().includes(query))&&(!$('unlearned').checked||!remembered.has(c.id)));
+  const pages=Math.max(1,Math.ceil(filtered.length/size));page=Math.min(page,pages-1);
+  $('status').textContent=filtered.length.toLocaleString('vi')+' thẻ phù hợp · '+rows.filter(c=>remembered.has(c.id)).length+' đã đánh dấu';
+  $('page').textContent='Trang '+(page+1)+' / '+pages;$('prev').disabled=!page;$('next').disabled=page+1>=pages;
+  $('cards').replaceChildren(...filtered.slice(page*size,(page+1)*size).map(c=>{
+    const card=make('article'), title=make('h2',c.word); title.lang='en';
+    card.append(make('small',c.topic),title);
+    if(c.image){const img=make('img');img.className='image';img.loading='lazy';img.alt='Minh họa: '+c.word;img.src=c.image;img.addEventListener('error',()=>img.remove(),{once:true});card.append(img)}
+    const definition=make('p',c.meaning||'Chưa có nghĩa — đang biên soạn.'); if(c.meaning) definition.lang='en';else definition.className='draft';card.append(definition);
+    if(c.example){const example=make('p',c.example);example.lang='en';card.append(example)}
+    const actions=make('div');actions.className='actions';
+    const hear=make('button','▶ Nghe');hear.disabled=!('speechSynthesis' in window);hear.onclick=()=>{speechSynthesis.cancel();const audio=new SpeechSynthesisUtterance(c.word);audio.lang='en-US';audio.onerror=e=>{if(!['canceled','interrupted'].includes(e.error))$('status').textContent='Thiết bị chưa phát được âm thanh.'};speechSynthesis.speak(audio)};
+    const mark=make('button',remembered.has(c.id)?'✓ Đã nhớ':'Đánh dấu đã nhớ');mark.setAttribute('aria-pressed',String(remembered.has(c.id)));mark.onclick=()=>{remembered.has(c.id)?remembered.delete(c.id):remembered.add(c.id);let saved=true;try{localStorage.setItem(key,JSON.stringify([...remembered]))}catch{saved=false}render();if(!saved)$('status').textContent+=' · Trình duyệt không lưu được thay đổi.'};
+    actions.append(hear,mark);card.append(actions);return card;
+  }));
+}
+for(const id of ['search','topic','unlearned'])$(id).addEventListener('input',()=>{page=0;render()});
+$('prev').onclick=()=>{page--;render();$('status').scrollIntoView()};$('next').onclick=()=>{page++;render();$('status').scrollIntoView()};
+fetch('./cards-3000.json').then(r=>{if(!r.ok)throw Error('load');return r.json()}).then(data=>{
+  if(!Array.isArray(data)||data.length!==3000)throw Error('catalogue');
+  rows=data;for(const name of [...new Set(rows.map(c=>c.topic))].sort())$('topic').append(new Option(name,name));render();
+}).catch(()=>{$('status').textContent='Chưa tải được bộ thẻ. Hãy thử tải lại trang.';$('prev').disabled=$('next').disabled=true});
+</script>
+</html>
