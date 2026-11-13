@@ -51,6 +51,7 @@ export default function GamesPage() {
   const [marks, setMarks] = useState<string[]>([]);
   const [done, setDone] = useState(false);
   const [adventure, setAdventure] = useState(false);
+  const [freePlay, setFreePlay] = useState(false);
   const [checkpoint, setCheckpoint] = useState(0);
   const [adventureReady, setAdventureReady] = useState(false);
   const [role, setRole] = useState<Role>(roles[0]);
@@ -123,10 +124,9 @@ export default function GamesPage() {
     <label>Language <select aria-label="Language" value={locale} onChange={event => changeLocale(event.target.value)}><option value="en">English</option><option value="ja">日本語</option><option value="ko">한국어</option></select></label>
     <a href="/learn">← Back to learning</a><p className={styles.eyebrow}>TINGLE PLAY · FRUIT STARTER</p>
     <section className={`${styles.play} ${styles.questHall}`} style={characterColors(role)} aria-label="Tingle Adventure">
-      <header className={styles.atlasHero}>
+      <header className={`${styles.atlasHero} ${adventure ? styles.activeAdventure : ""}`}>
         <div><p className={styles.eyebrow}>TINGLE ADVENTURE · FRUIT STARTER</p><h1>{adventure ? adventureChapters[chapter] : "The Word Atlas"}</h1>
-          <p>The Word Atlas is missing its words. Join Tingle Friend and bring them back, one quest at a time.</p>
-          {adventure ? <button onClick={() => { setAdventure(false); restart(games[0]); }}>Free play</button> : <button disabled={!adventureReady} onClick={enterAdventure}>{checkpoint === 0 ? "Start adventure" : checkpoint === games.length ? "See adventure results" : "Continue adventure"} <span aria-hidden="true">→</span></button>}
+          <p>{adventure ? `${player.name} · ${checkpoint} of ${games.length} quests complete` : "Choose a character and help Tingle Friend recover the lost words."}</p>
         </div>
         <div className={styles.heroPortrait}><img src="/tingle-adventure-friend.webp" alt="Tingle Friend" width={280} height={280} /></div>
       </header>
@@ -138,6 +138,16 @@ export default function GamesPage() {
           <span><strong>{characters[item].name}</strong><small>{item} · {characters[item].label}</small></span>
         </label>)}
       </fieldset>}
+      {!adventure && <div className={styles.journeyActions}>
+        <button className={styles.primaryQuest} disabled={!adventureReady} onClick={() => { setFreePlay(false); enterAdventure(); }}>{checkpoint === 0 ? "Start adventure" : checkpoint === games.length ? "See adventure results" : "Continue adventure"} <span aria-hidden="true">→</span></button>
+        <button aria-expanded={freePlay} aria-controls="tingle-free-play" onClick={() => setFreePlay(value => !value)}>{freePlay ? "Close free play" : "Free play"}</button>
+      </div>}
+      {adventure && <div className={styles.journeyActions}>
+        {checkpoint > stage && checkpoint < games.length && <button className={styles.primaryQuest} onClick={() => restart(games[checkpoint])}>Next stage →</button>}
+        <button onClick={() => { setAdventure(false); restart(games[0]); }}>Back to adventure hub</button>
+      </div>}
+      <details className={styles.atlasDetails}>
+        <summary>Map &amp; rewards</summary>
       <ol className={styles.worldMap} aria-label="Adventure map">
         {adventureChapters.map((name, index) => {
           const complete = checkpoint >= (index + 1) * 5;
@@ -167,10 +177,13 @@ export default function GamesPage() {
         <ul className={styles.relics} aria-label="Adventure inventory">
           {relics.map((item, index) => <li key={item} data-earned={checkpoint >= (index + 1) * 5}>{checkpoint >= (index + 1) * 5 ? "✓" : "◇"} {item}<small>{checkpoint >= (index + 1) * 5 ? "Collected" : `Unlock at quest ${(index + 1) * 5}`}</small></li>)}
         </ul>
-        {checkpoint === games.length && <h3>Adventure complete! You finished all {games.length} games.</h3>}
       </>}
+      </details>
+      {adventure && checkpoint === games.length && <h3 role="status">Adventure complete! You finished all {games.length} games.</h3>}
     </section>
-    {!adventure && <nav aria-label="Choose a game" className={`${styles.tabs} ${styles.gameMenu}`}>{games.map((name, index) => <button key={name} style={{ "--game-delay": `${index * 18}ms` } as CSSProperties} aria-pressed={game === name} onClick={() => restart(name)}><span>{name}</span></button>)}</nav>}
+    <div id="tingle-free-play" hidden={!adventure && !freePlay}>
+    {!adventure && freePlay && <nav aria-label="Choose a game" className={`${styles.tabs} ${styles.gameMenu}`}>{games.map((name, index) => <button key={name} style={{ "--game-delay": `${index * 18}ms` } as CSSProperties} aria-pressed={game === name} onClick={() => restart(name)}><span>{name}</span></button>)}</nav>}
+    {(adventure || freePlay) && <>
     <div key={game} className={styles.gameEntrance}>
     {adventure && checkpoint === games.length ? null : moreGames.includes(game) ? <MoreGames key={game} game={game} locale={locale} onComplete={finishStage} /> : challengeNames.includes(game) ? <StarterChallenges key={game} game={game} locale={locale} onComplete={finishStage} /> : <section className={styles.play} aria-label={game}>
       <header><div><h2>{game}</h2><p>{pairing ? "Match each sketch with its word. Different pairs stay visible until your next choice." : game === "Picture Pick" ? "Choose the sketch for this word." : game === "Dot Bingo" ? "Listen, then mark the correct word. Complete a row of three." : "Listen, then choose the matching sketch."}</p></div><button onClick={() => restart()}>New round ↻</button></header>
@@ -182,8 +195,9 @@ export default function GamesPage() {
       }) : (game === "Dot Bingo" ? board : order).map(word => <button className={styles.card} key={word} disabled={done || marks.includes(word)} onClick={() => choose(word)} aria-label={word}>{game === "Dot Bingo" ? <>{word}<span className={styles.dot}>{marks.includes(word) ? "●" : "○"}</span></> : <img src={`/game-sketches/${word}-pencil-draft-v1.png`} alt={word} />}</button>)}</div>
     </section>}
     </div>
-    {adventure && checkpoint > stage && checkpoint < games.length && <div className={styles.tabs}><button onClick={() => restart(games[checkpoint])}>Next stage →</button></div>}
-    {!adventure && <GuidedLevel locale={locale} />}
+    {!adventure && <details className={styles.atlasDetails}><summary>Guided review</summary><GuidedLevel locale={locale} /></details>}
+    </>}
+    </div>
     <p>20 learning quests in the Fruit Starter adventure. English pronunciation uses your browser’s voices. Adventure checkpoints are saved on this browser.</p>
   </main>, locale);
 }

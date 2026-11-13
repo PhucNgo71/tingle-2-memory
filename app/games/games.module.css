@@ -64,3 +64,10 @@
   .main .gameMenu button, .gameMenu button[aria-pressed="true"] span, .gameEntrance { animation: none; transition: none; }
   .main .gameMenu button:hover, .main .gameMenu button:active { transform: none; }
 }
+.questHall .activeAdventure { min-height: 0; padding: clamp(.85rem, 3vw, 1.35rem); grid-template-columns: minmax(0, 1fr) auto; }
+.activeAdventure h1 { font-size: clamp(1.65rem, 4vw, 2.8rem); margin-block: .25rem; }
+.activeAdventure .heroPortrait { width: clamp(52px, 12vw, 100px); grid-row: auto; }
+.journeyActions { display: flex; flex-wrap: wrap; align-items: center; gap: .65rem; margin-top: 1rem; }
+.main .primaryQuest { background: var(--player-color); color: white; font-weight: 800; border-color: transparent; }
+.atlasDetails { margin-top: .85rem; padding: .7rem .85rem; border: 1px solid #e5ded3; border-radius: .9rem; background: #fffdf8; }
+.atlasDetails > summary { cursor: pointer; font-weight: 750; }
