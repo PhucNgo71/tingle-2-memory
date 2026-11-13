@@ -1,2 +1,45 @@
 .main{max-width:1100px;margin:auto;padding:40px 20px 80px;color:#292722;font-family:inherit}.main h1{font-size:clamp(32px,5vw,60px);line-height:1.12;margin:20px 0}.main p{line-height:1.6}.eyebrow{color:#ff7a00;font-size:12px;font-weight:800;letter-spacing:.15em;margin-top:32px}.tabs{display:flex;flex-wrap:wrap;gap:10px;margin:28px 0}.main button{font:inherit;cursor:pointer;border:1px solid #e5ded3;border-radius:16px;padding:12px 18px;background:white;color:#292722}.main button:focus-visible{outline:3px solid #ff7a00;outline-offset:4px}.tabs button[aria-pressed=true]{background:#ff7a00;color:white;border-color:#ff7a00}.play{background:#f8efdf;border-radius:28px;padding:24px;margin-bottom:40px}.play header{display:flex;justify-content:space-between;align-items:flex-start;gap:20px}.play h2{font-size:26px;margin:0}.play header p{max-width:620px}.prompt{display:flex;gap:24px;align-items:center;margin:20px 0}.feedback{min-height:30px;font-weight:600}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.main .card{min-height:170px;position:relative;font-size:28px;border-radius:20px;display:flex;align-items:center;justify-content:center;flex-direction:column;transition:transform .15s}.card:hover:not(:disabled){transform:translateY(-3px)}.card img{width:100%;height:160px;object-fit:contain}.card[aria-pressed=true]{border:3px solid #ff7a00}.card:disabled{cursor:default;opacity:.7}.dot{position:absolute;right:16px;bottom:12px;color:#ff7a00}.roadmap{display:flex;flex-wrap:wrap;gap:12px;margin:20px 0}.roadmap span{background:#f8efdf;border-radius:12px;padding:12px;font-size:14px}@media(max-width:600px){.grid{grid-template-columns:repeat(2,1fr)}.play{padding:16px}.play header{flex-direction:column}.main .card{min-height:130px;font-size:23px}.card img{height:120px}}@media(prefers-reduced-motion:reduce){.main .card{transition:none}.card:hover:not(:disabled){transform:none}}
 .bingo{grid-template-columns:repeat(3,minmax(0,1fr))!important}.main .bingo button{padding:8px;font-size:clamp(14px,3.8vw,26px);min-width:0;overflow-wrap:anywhere}.main input,.main select{max-width:100%;border:1px solid #ded8cf;border-radius:10px;padding:10px;background:white;font:inherit}.main form{display:flex;flex-wrap:wrap;gap:12px;align-items:center}.main form input{display:block}.main button:disabled{cursor:default;opacity:.6}.prompt{flex-wrap:wrap}
+.questHall { background: linear-gradient(145deg,#fffaf0,#ffecd2); border: 1px solid #efd5ae; }
+.roleChoices { display: flex; flex-wrap: wrap; gap: .65rem; margin-top: 1rem; }
+.roleChoices legend { font-weight: 800; margin-bottom: .5rem; }
+.roleChoices label { padding: .55rem .8rem; border: 1px solid #dabb91; background: #fffdf7; border-radius: 1rem; cursor: pointer; }
+.roleChoices input { accent-color: #a74e00; }
+.questBrief { display: flex; gap: 1rem; align-items: center; margin-top: 1rem; border-radius: 1.25rem; padding: 1rem; background: #fffdf7; }
+.questBrief img { width: clamp(48px, 12vw, 88px); height: auto; flex: none; }
+.relics { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%, 140px),1fr)); gap: .65rem; margin-top: 1rem; }
+.relics li { padding: .65rem; border: 1px dashed #c4a47d; border-radius: .8rem; font-weight: 700; }
+.relics li[data-earned="true"] { border: 1px solid var(--player-color); background: var(--player-tint); }
+.roleChoices label { display: flex; align-items: center; gap: .55rem; }
+.roleChoices label:has(:checked) { border-color: var(--player-color); background: var(--player-tint); }
+.roleChoices input { accent-color: var(--player-color); }
+.roleChoices small { display: block; }
+.playerAvatar { display: inline-grid; place-items: center; flex: none; width: 2.5rem; height: 2.5rem; border-radius: 42% 42% 48% 48%; background: var(--player-color); color: white; font-size: 1.35rem; }
+.playerIdentity { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; margin-top: 1rem; color: var(--player-color); }
+.playerProgress { accent-color: var(--player-color); }
+.mapStop { background: #f5f5f4; color: #57534e; }
+.mapStop[data-earned="true"], .mapStop[aria-current="step"] { border-color: var(--player-color); background: var(--player-tint); color: var(--player-color); }
+.relics small { display: block; font-weight: 500; }
+.questHall { padding: clamp(1rem,3vw,2rem); background: #fbf4e6; box-shadow: 0 24px 60px #74502715; }
+.questHall .atlasHero { display: grid; grid-template-columns: minmax(0,1.5fr) minmax(0,1fr); align-items: center; isolation: isolate; overflow: hidden; position: relative; min-height: 300px; border-radius: 24px; padding: clamp(1.35rem,4vw,3rem); color: #fff7e8; background: radial-gradient(ellipse at 85% 70%,#536f50,transparent 57%),#1c352c; }
+.atlasHero::before { content: ""; position: absolute; z-index: -1; inset: 0; background: radial-gradient(circle,#ffe0ac 1px,transparent 2px) 0 0/31px 31px; opacity: .16; }
+.atlasHero .eyebrow { margin: 0; color: #ffd399; }
+.atlasHero h1 { font-size: clamp(2.45rem,6vw,5rem); margin: .4rem 0 .75rem; letter-spacing: -.05em; }
+.main .atlasHero button { margin-top: 1.15rem; background: var(--player-tint); color: #28201a; border-color: transparent; font-weight: 800; }
+.heroPortrait { display: grid; place-items: center; border-radius: 50%; aspect-ratio: 1; width: min(100%,270px); justify-self: center; background: radial-gradient(circle,#fbdb9950,transparent 72%); }
+.heroPortrait img { width: 100%; height: auto; filter: drop-shadow(0 18px 22px #14231b88); animation: atlasFloat 3s ease-in-out 2; }
+.worldMap { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: .75rem; margin-top: 1.25rem; padding: 0; list-style: none; }
+.worldMap > li { display: grid; align-content: start; gap: .35rem; min-width: 0; border: 2px solid transparent; border-radius: 18px; padding: .8rem; background: var(--terrain,#f3e4c5); }
+.worldMap > li[data-region="1"] { --terrain: #deead3; }
+.worldMap > li[data-region="2"] { --terrain: #e9def3; }
+.worldMap > li[data-region="3"] { --terrain: #ddeaf0; }
+.worldMap > li[data-current="true"] { border-color: var(--player-color); }
+.worldMap small { font-size: .68rem; font-weight: 900; letter-spacing: .1em; }
+.worldMap > li > span:last-of-type { font-size: .77rem; }
+.regionIcon { font-size: 2rem; line-height: 1.1; color: #365445; }
+.questPips { display: flex; flex-wrap: wrap; gap: .25rem; padding: 0; margin: .35rem 0 0; list-style: none; }
+.questPips li { display: grid; place-items: center; width: 1.55rem; height: 1.55rem; border-radius: 50%; border: 1px solid #57433425; font-size: .7rem; font-weight: 800; }
+@keyframes atlasFloat { 50% { transform: translateY(-8px) rotate(2deg); } }
+@media(max-width:750px) { .worldMap { grid-template-columns: repeat(2,minmax(0,1fr)); } }
+@media(max-width:520px) { .questHall .atlasHero { grid-template-columns: minmax(0,1fr); gap: .5rem; } .heroPortrait { grid-row: 1; width: 108px; justify-self: start; } }
+@media(prefers-reduced-motion:reduce) { .heroPortrait img { animation: none; } }

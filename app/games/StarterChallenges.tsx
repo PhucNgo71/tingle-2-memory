@@ -20,7 +20,7 @@ function image(word: string) {
   return fruits.includes(word) ? `/game-sketches/${word}-pencil-draft-v1.png` : `/archive-images/v1/cards/${word}.webp`;
 }
 
-export default function StarterChallenges({ game, locale = "en" }: { game: string; locale?: InterfaceLocale }) {
+export default function StarterChallenges({ game, locale = "en", onComplete }: { game: string; locale?: InterfaceLocale; onComplete?: () => void }) {
   const [round, setRound] = useState(0);
   const [used, setUsed] = useState<number[]>([]);
   const [message, setMessage] = useState("Ready! Take your time.");
@@ -36,7 +36,7 @@ export default function StarterChallenges({ game, locale = "en" }: { game: strin
     if (done || solved) return;
     if (!correct) { setMessage("Not quite. Try again—you have time."); return; }
     setSolved(true);
-    if (round === count - 1) { setDone(true); setMessage("You finished! Wonderful recall."); }
+    if (round === count - 1) { setDone(true); onComplete?.(); setMessage("You finished! Wonderful recall."); }
     else setMessage("Yes! Choose Next when you’re ready.");
   }
   function next() { setRound(round + 1); setUsed([]); setSolved(false); setMessage("Ready for the next card."); }

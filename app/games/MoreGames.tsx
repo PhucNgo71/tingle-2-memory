@@ -18,7 +18,7 @@ const instructions: Record<string, string> = {
   "My Review Mix": "Review all six starter words through picture, meaning, and sentence questions. This free-play round does not certify mastery; use the guided level below for that.",
 };
 
-export default function MoreGames({ game, locale = "en" }: { game: string; locale?: InterfaceLocale }) {
+export default function MoreGames({ game, locale = "en", onComplete }: { game: string; locale?: InterfaceLocale; onComplete?: () => void }) {
   const [round, setRound] = useState(0);
   const [solved, setSolved] = useState(false);
   const [done, setDone] = useState(false);
@@ -50,7 +50,7 @@ export default function MoreGames({ game, locale = "en" }: { game: string; local
     if (solved || done) return;
     if (!correct) { setMessage("Not quite. Try again, or use a hint."); return; }
     setSolved(true); const last = round === active.length - 1;
-    if (last) { setDone(true); setMessage("Round complete! Take a break or play again."); }
+    if (last) { setDone(true); onComplete?.(); setMessage("Round complete! Take a break or play again."); }
     else setMessage("You got it! Choose Next when ready.");
   }
   function next() { setRound(round + 1); setSolved(false); setHidden(false); setReveal(25); setEntry(""); setMessage("Ready for the next word."); }
