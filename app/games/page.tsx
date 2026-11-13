@@ -9,7 +9,6 @@ import { localizeTree, type InterfaceLocale } from "./localization";
 
 const words = ["apple", "banana", "pear", "grape", "lemon", "strawberry"];
 const games = ["Picture Pick", "Listen & Find", "Pair Match", "Memory Flip", "Dot Bingo", ...challengeNames, ...moreGames];
-const shuffle = <T,>(values: T[]) => {
 const adventureKey = "tingle-adventure-stage-v1";
 const adventureChapters = ["The Orchard Gate", "The Hidden Grove", "The Color Caves", "The Memory Summit"];
 const chapterIcons = ["❧", "♣", "◆", "▲"];
@@ -30,6 +29,7 @@ const characters = {
 function characterColors(role: Role) {
   return { "--player-color": characters[role].color, "--player-tint": characters[role].tint } as CSSProperties;
 }
+const shuffle = <T,>(values: T[]) => {
   const copy = [...values];
   for (let i = copy.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [copy[i], copy[j]] = [copy[j], copy[i]]; }
   return copy;
@@ -50,10 +50,6 @@ export default function GamesPage() {
   const [matched, setMatched] = useState<string[]>([]);
   const [marks, setMarks] = useState<string[]>([]);
   const [done, setDone] = useState(false);
-  const audioRequest = useRef(0);
-  const target = order[round % order.length];
-  function restart(name = game) {
-    audioRequest.current++;
   const [adventure, setAdventure] = useState(false);
   const [checkpoint, setCheckpoint] = useState(0);
   const [adventureReady, setAdventureReady] = useState(false);
@@ -81,6 +77,10 @@ export default function GamesPage() {
     try { localStorage.setItem("tingle-adventure-role-v1", role); } catch { /* The role still works for this visit. */ }
     if (checkpoint < games.length) restart(games[checkpoint]);
   }
+  const audioRequest = useRef(0);
+  const target = order[round % order.length];
+  function restart(name = game) {
+    audioRequest.current++;
     if (typeof window !== "undefined") window.speechSynthesis?.cancel();
     setGame(name); setOrder(shuffle(words)); setBoard(shuffle(words)); setCards(shuffle(deck)); setRound(0); setSelected([]); setMatched([]); setMarks([]); setDone(false); setFeedback("Ready! Give it a try.");
   }
